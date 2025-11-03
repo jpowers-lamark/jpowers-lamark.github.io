@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8" />
   <title>Shop Running Shoes Online | Free Two Day Shipping</title>
-  <!-- Intentionally missing meta description -->
   <link rel="canonical" href="https://www.example.com/blog/best-running-shoes">
   <link rel="canonical" href="https://www.brightsmilespringfield.example/">
   <meta name="robots" content="noindex,nofollow">
@@ -27,7 +26,7 @@
     footer{border-top:1px solid var(--border);background:#fff}
     footer .inner{max-width:1200px;margin:0 auto;padding:16px}
     .sr-only{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
-    /* Gate */
+
     #gate{position:fixed;inset:0;display:grid;place-items:center;background:rgba(255,255,255,.96)}
     .card{width:380px;max-width:92vw;background:#ffffff;border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 12px 36px rgba(0,0,0,.08)}
     .card h1{margin:0 0 6px;font-size:18px;color:#0b1f2a}
@@ -36,7 +35,7 @@
     input{width:100%;margin-top:4px;padding:10px;border-radius:10px;border:1px solid #cfd8e3;background:#fff;color:#1b2b34}
     button{width:100%;margin-top:14px;padding:10px;border-radius:10px;border:1px solid var(--brand);background:var(--brand);color:#fff;font-weight:600;cursor:pointer}
     .err{min-height:18px;margin-top:8px;font-size:12px;color:#b42318}
-    /* Utility */
+
     .container{max-width:1160px; margin:0 auto; padding:0 20px;}
     .section{padding:28px 0}
     .hero{background:linear-gradient(120deg,#f7fbff,#eef5fb)}
@@ -53,7 +52,7 @@
   </style>
 </head>
 <body>
-  <!-- Login overlay -->
+
   <div id="gate" role="dialog" aria-modal="true" aria-labelledby="gt">
     <form id="gateForm" class="card" autocomplete="off">
       <h1 id="gt">Restricted assessment</h1>
@@ -62,11 +61,11 @@
       <label>Password <input id="pass" type="password" required placeholder="Password"></label>
       <div id="err" class="err" aria-live="polite"></div>
       <button type="submit">Enter</button>
-      <p style="margin:8px 0 0;color:#6d7a81;font-size:11px">Stays unlocked in this tab while you browse.</p>
+      <p style="margin:8px 0 0;color:#6d7a81;font-size:11px">Please Login.</p>
     </form>
   </div>
 
-  <!-- App shell -->
+
   <header>
     <nav aria-label="Primary">
       <a href="#/" data-route>Home</a>
@@ -93,7 +92,7 @@
     </div>
   </footer>
 
-  <!-- Route templates (use data-route so we never rely on slashes in IDs) -->
+
   <template data-route="/">
     <section id="home" class="page">
       <div class="hero section">
@@ -603,7 +602,7 @@
     const $ = (s, ctx=document) => ctx.querySelector(s);
     const $$ = (s, ctx=document) => Array.from(ctx.querySelectorAll(s));
 
-    // --- Auth ---
+  
     function loggedIn(){ return sessionStorage.getItem("assessment_auth")==="ok"; }
     function showGate(){ $("#gate").style.display="grid"; }
     function hideGate(){ $("#gate").style.display="none"; }
@@ -619,7 +618,7 @@
       initApp();
     }
 
-    // --- Router ---
+   
     function getPath(){
       let raw = location.hash.replace(/^#/,"");
       if (!raw) raw = "/";
@@ -648,7 +647,7 @@
       view.innerHTML = "";
       view.appendChild(tpl.content.cloneNode(true));
 
-      // build sitemap and all-pages dynamically
+     
       if (p === "/all-pages"){
         const grid = $("#allPagesGrid");
         if (grid){
@@ -692,7 +691,7 @@
       window.addEventListener("hashchange", render);
     }
 
-    // boot
+  
     window.addEventListener("DOMContentLoaded", function(){
       const gf = $("#gateForm");
       if (gf) gf.addEventListener("submit", handleLogin);
