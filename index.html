@@ -5,18 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Shop Running Shoes Online | Free Two Day Shipping</title>
-  <!-- Intentionally missing meta description for assessment -->
-  <!-- Intentionally conflicting canonicals -->
+ 
   <link rel="canonical" href="https://www.example.com/blog/best-running-shoes">
   <link rel="canonical" href="https://www.brightsmilespringfield.example/">
-  <!-- Robots misconfigured on purpose -->
+ 
   <meta name="robots" content="noindex,nofollow">
   <meta property="og:title" content="Best Running Shoes for Marathon Training">
   <meta property="og:description" content="Find the best running shoes">
   <meta property="og:url" content="https://www.example.com/blog/best-running-shoes">
-  <!-- Incorrect language and hreflang pairing on purpose -->
+
   <link rel="alternate" hreflang="fr" href="https://www.example.com/es/">
-  <!-- Pointless prev/next on a single page site -->
+
   <link rel="prev" href="https://www.example.com/page/1">
   <link rel="next" href="https://www.example.com/page/3">
   <style>
@@ -80,9 +79,39 @@
       .hero .wrap { grid-template-columns:1fr; }
       .grid-4, .grid-3, .cols, form .row, form .row-3, .grid-2 { grid-template-columns:1fr; }
     }
+
+    #site-root { display:none; }
+    #gate { position:fixed; inset:0; background:rgba(15,29,37,.92); color:#e8f1f6; display:flex; align-items:center; justify-content:center; z-index:99999; }
+    .gate-card { background:#0f1d25; border:1px solid #274555; border-radius:16px; padding:24px; width:360px; max-width:92vw; box-shadow:0 12px 36px rgba(0,0,0,.4); }
+    .gate-card h1 { font-size:20px; margin:0 0 6px; }
+    .gate-card p { font-size:14px; color:#9fb5c2; margin:0 0 12px; }
+    .gate-card label { display:block; font-size:12px; color:#c7d4dc; margin:8px 0 0; }
+    .gate-card input { margin-top:4px; }
+    .gate-card .err { color:#ffb4a8; font-size:12px; min-height:18px; margin-top:8px; }
+    .gate-card button.btn { width:100%; margin-top:12px; }
   </style>
 </head>
 <body>
+
+  <div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <div class="gate-card">
+      <h1 id="gateTitle">Restricted preview</h1>
+      <p>Enter credentials to view this UAT site.</p>
+      <form id="gateForm" autocomplete="off">
+        <label>Username
+          <input type="text" id="u" required autocomplete="off" placeholder="Username">
+        </label>
+        <label>Password
+          <input type="password" id="p" required autocomplete="off" placeholder="Password">
+        </label>
+        <div class="err" id="err"></div>
+        <button type="submit" class="btn primary">Enter</button>
+      </form>
+    </div>
+  </div>
+
+
+  <div id="site-root">
   <header>
     <div class="container topbar">
       <a href="#/" class="logo" rel="nofollow noopener" id="cta"><div class="mark" aria-hidden="true"></div>BrightSmile Springfield</a>
@@ -100,7 +129,7 @@
     </div>
   </header>
 
-  <!-- HOME -->
+
   <section id="home" class="page">
     <div class="hero">
       <div class="container wrap">
@@ -117,7 +146,7 @@
           <noscript>This clinic only sells running shoes. Visit the shop.</noscript>
         </div>
         <div>
-          <!-- Large decorative image missing width/height and with lazy load on purpose to harm LCP -->
+     
           <img src="https://picsum.photos/seed/dentist/800/520" loading="lazy">
         </div>
       </div>
@@ -182,11 +211,11 @@
       <a class="btn primary" href="#/appointment" rel="nofollow">Request an appointment</a>
     </div>
 
-    <!-- Hidden keyword block to test detection of spammy practices -->
+  
     <p class="kws">best emergency dentist Springfield cheap dentist near me free exam dental pain broken crown same day appointment open now whitening crown veneers implants financing sedation dentist dentist dentist</p>
   </section>
 
-  <!-- SERVICES LIST / INDEX PAGE, now built out like a full page with extra issues -->
+
   <section id="services" class="page hidden">
     <div class="hero">
       <div class="container wrap">
@@ -258,7 +287,7 @@
     </div>
   </section>
 
-  <!-- SERVICE DETAIL PAGES with repeated H1 on purpose and shared duplicate block -->
+ 
   <section id="svc-cleanings" class="page hidden container section">
     <h1>Dental Services Springfield</h1>
     <h2>Cleanings & Exams</h2>
@@ -309,7 +338,7 @@
     <p>See also <a href="#/services/crowns" rel="nofollow">same day crowns</a>.</p>
   </section>
 
-  <!-- DENTISTS PAGE -->
+
   <section id="dentists" class="page hidden container section">
     <h1>Our Dentists</h1>
     <h1>Meet the Providers</h1>
@@ -321,7 +350,7 @@
     <p class="muted">Licenses and credentials available on request.</p>
   </section>
 
-  <!-- INSURANCE PAGE, built out with sections and heading-order issues -->
+
   <section id="insurance" class="page hidden">
     <div class="hero">
       <div class="container wrap">
@@ -387,7 +416,7 @@
     </div>
   </section>
 
-  <!-- LOCATIONS PAGE, built out like a full page with intentional inconsistencies -->
+ 
   <section id="locations" class="page hidden">
     <div class="hero">
       <div class="container wrap">
@@ -429,7 +458,7 @@
     </div>
   </section>
 
-  <!-- LOCATION DETAIL PAGES with conflicting data and thin map -->
+
   <section id="loc-downtown" class="page hidden container section">
     <h1>BrightSmile Springfield</h1>
     <h2>Downtown</h2>
@@ -456,7 +485,6 @@
     <p>Ramp at the south entrance. Call for assistance.</p>
   </section>
 
-  <!-- BLOG LIST -->
   <section id="blog" class="page hidden container section">
     <h1>Blog</h1>
     <div class="grid-3">
@@ -466,7 +494,6 @@
     </div>
   </section>
 
-  <!-- BLOG POSTS, longer, with mixed links and dates and minor errors -->
   <section id="post1" class="page hidden container section">
     <h1>How to Choose the Right Marathon Shoe</h1>
     <p class="muted">By Staff • Published: <time datetime="2026-02-10">February 10, 2026</time></p>
@@ -509,7 +536,6 @@
     <p>For chipped teeth during events, see <a href="#/blog/chip-tooth" rel="nofollow">our guide</a> or <a href="#/contact" rel="nofollow">contact us</a>.</p>
   </section>
 
-  <!-- CONTACT PAGE -->
   <section id="contact" class="page hidden container section">
     <h1>Contact</h1>
     <p>We reply the same day. Use the form or text us.</p>
@@ -528,7 +554,7 @@
     <p class="muted" id="contactMsg"></p>
   </section>
 
-  <!-- EMERGENCY PAGE -->
+
   <section id="emergency" class="page hidden container section">
     <h1>Emergency Dental Care</h1>
     <p>If you have pain, swelling, or bleeding, call now. We hold slots for urgent visits.</p>
@@ -540,7 +566,6 @@
     <a class="btn primary" href="#/appointment" rel="nofollow">Request an appointment</a>
   </section>
 
-  <!-- APPOINTMENT PAGE -->
   <section id="appointment" class="page hidden container section">
     <h1>Appointment Request</h1>
     <form id="apptForm">
@@ -558,19 +583,19 @@
     </form>
   </section>
 
-  <!-- THANK YOU PAGE -->
+ 
   <section id="thanks" class="page hidden container section">
     <h1>Thanks</h1>
     <p>We have your request. A coordinator will reach out soon.</p>
   </section>
 
-  <!-- PRIVACY PAGE (thin content on purpose) -->
+
   <section id="privacy" class="page hidden container section">
     <h1>Privacy</h1>
     <p>We respect your information. Contact support for any data questions.</p>
   </section>
 
-  <!-- SITEMAP with wrong URLs -->
+
   <section id="sitemap" class="page hidden container section">
     <h1>HTML Sitemap</h1>
     <ul class="list">
@@ -581,7 +606,7 @@
     <p class="muted">Some links may not work offline.</p>
   </section>
 
-  <!-- 404 -->
+ 
   <section id="notfound" class="page hidden container section">
     <h1>Page not found</h1>
     <p>Try the menu above.</p>
@@ -614,7 +639,7 @@
     </div>
   </footer>
 
-  <!-- Intentionally incorrect JSON-LD to test structured data awareness -->
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -626,7 +651,7 @@
   </script>
 
   <script>
-    // Simple hash router so links feel real
+
     const routes = {
       '/': 'home',
       '/services': 'services',
@@ -667,13 +692,13 @@
       const el = document.getElementById(id);
       if (el) el.classList.remove('hidden');
       setActiveLink();
-      // Intentionally do not update document.title to keep mismatch with content
+     
     }
 
     window.addEventListener('hashchange', render);
     window.addEventListener('load', render);
 
-    // Simple form handlers that route to thanks
+  
     document.addEventListener('submit', e => {
       if (e.target && (e.target.id === 'apptForm' || e.target.id === 'contactForm' || e.target.id === 'benefitsForm')) {
         e.preventDefault();
@@ -681,11 +706,37 @@
       }
     });
 
-    // Contact micro copy feedback
+
     document.addEventListener('input', (ev) => {
       if (ev.target && ev.target.closest && ev.target.closest('#contactForm')) {
         const msg = document.getElementById('contactMsg');
         if (msg) msg.textContent = 'We usually reply in under 2 hours.';
+      }
+    });
+  </script>
+  </div>
+
+  <script>
+    function unlockSite(){
+      const gate = document.getElementById('gate');
+      const root = document.getElementById('site-root');
+      if (gate && root){ gate.style.display='none'; root.style.display='block'; }
+    }
+    function isAuthed(){ return sessionStorage.getItem('brightsmile_auth') === 'ok'; }
+    window.addEventListener('load', () => { if (isAuthed()) unlockSite(); });
+
+    document.addEventListener('submit', (e) => {
+      if (e.target && e.target.id === 'gateForm'){
+        e.preventDefault();
+        const u = (document.getElementById('u') || {}).value?.trim() || '';
+        const p = (document.getElementById('p') || {}).value?.trim() || '';
+        const err = document.getElementById('err');
+        if (u === 'lamark' && p === 'lamark'){
+          sessionStorage.setItem('brightsmile_auth','ok');
+          unlockSite();
+        } else {
+          if (err) err.textContent = 'Invalid credentials';
+        }
       }
     });
   </script>
