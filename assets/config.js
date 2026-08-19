@@ -3,8 +3,8 @@
  * The publishable browser key is not a secret. Row Level Security protects persisted data.
  */
 window.SE_CONFIG = Object.freeze({
-  supabaseUrl: '',
-  supabaseAnonKey: '',
+  supabaseUrl: 'https://omdfbnuiwkgqnkyrxdky.supabase.co',
+  supabaseAnonKey: 'sb_publishable_2WnzR9lMncFa5c12AHJnwg_PoyKhllb',
   enableDemoFallback: true,
   appName: 'Lamark Search Everywhere Lab',
   defaultStageSeconds: 480,
