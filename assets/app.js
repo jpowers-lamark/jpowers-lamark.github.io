@@ -64,6 +64,7 @@ const state = {
   drag: null,
   lastRender: 0,
   renderQueued: false,
+  pendingRender: false,
   auditSearchTimer: null,
   suppressRender: false,
   remoteCursors: new Map(),
@@ -118,13 +119,126 @@ function setConnectionLabel(status, mode = state.connectionMode) {
   appShell.dataset.connection = status;
 }
 
+const EDITABLE_SELECTOR = 'input,textarea,select,[contenteditable="true"]';
+const SELF_RENDERING_CONTROL_SELECTOR = '[data-audit-filter],[data-audit-sort]';
+
+function isProtectedSceneEditor(node = document.activeElement) {
+  return Boolean(
+    node instanceof Element &&
+    sceneRoot.contains(node) &&
+    node.matches(EDITABLE_SELECTOR) &&
+    !node.matches(SELF_RENDERING_CONTROL_SELECTOR)
+  );
+}
+
 function scheduleRender() {
-  if (state.suppressRender || state.renderQueued) return;
+  if (state.suppressRender || isProtectedSceneEditor()) {
+    state.pendingRender = true;
+    return;
+  }
+  if (state.renderQueued) return;
   state.renderQueued = true;
   requestAnimationFrame(() => {
     state.renderQueued = false;
+    // A realtime event can queue a render just before a participant focuses a field.
+    // Recheck here so the queued frame cannot replace the active form control.
+    if (state.suppressRender || isProtectedSceneEditor()) {
+      state.pendingRender = true;
+      return;
+    }
+    state.pendingRender = false;
     renderStage();
   });
+}
+
+function updateSceneEditingLock() {
+  const stillEditing = isProtectedSceneEditor();
+  state.suppressRender = stillEditing;
+  if (!stillEditing && state.pendingRender) {
+    state.pendingRender = false;
+    scheduleRender();
+  }
+}
+
+const INLINE_DRAFT_FORMS = new Set(['journey-form', 'shock-form', 'challenge-form', 'takeaway-form']);
+const renderContext = () => `${stage().id}:${state.selectedClient}`;
+
+function readDraftControl(control) {
+  if (control.type === 'checkbox' || control.type === 'radio') return { checked: control.checked };
+  if (control instanceof HTMLSelectElement && control.multiple) {
+    return { values: [...control.selectedOptions].map((option) => option.value) };
+  }
+  return { value: control.value };
+}
+
+function writeDraftControl(control, snapshot) {
+  if (!snapshot) return;
+  if ('checked' in snapshot) control.checked = Boolean(snapshot.checked);
+  else if ('values' in snapshot && control instanceof HTMLSelectElement) {
+    const values = new Set(snapshot.values || []);
+    [...control.options].forEach((option) => { option.selected = values.has(option.value); });
+  } else if ('value' in snapshot) control.value = snapshot.value;
+}
+
+function captureSceneDraft() {
+  const forms = {};
+  INLINE_DRAFT_FORMS.forEach((formId) => {
+    const form = document.getElementById(formId);
+    if (!form || !sceneRoot.contains(form)) return;
+    const controls = {};
+    [...form.elements].forEach((control, index) => {
+      if (!control.matches?.('input, textarea, select')) return;
+      if (['submit', 'button', 'reset', 'image'].includes(control.type)) return;
+      const key = control.name || control.id || `field-${index}`;
+      controls[key] = readDraftControl(control);
+    });
+    forms[formId] = controls;
+  });
+
+  const active = document.activeElement;
+  let focus = null;
+  if (isProtectedSceneEditor(active)) {
+    focus = {
+      formId: active.form?.id || '',
+      key: active.name || active.id || '',
+      selectionStart: typeof active.selectionStart === 'number' ? active.selectionStart : null,
+      selectionEnd: typeof active.selectionEnd === 'number' ? active.selectionEnd : null,
+      selectionDirection: active.selectionDirection || 'none'
+    };
+  }
+
+  return {
+    context: sceneRoot.dataset.renderContext || '',
+    forms,
+    focus
+  };
+}
+
+function restoreSceneDraft(snapshot) {
+  if (!snapshot || snapshot.context !== renderContext()) return;
+  Object.entries(snapshot.forms || {}).forEach(([formId, controls]) => {
+    const form = document.getElementById(formId);
+    if (!form || !sceneRoot.contains(form)) return;
+    Object.entries(controls).forEach(([key, value]) => {
+      const control = [...form.elements].find((candidate) => (candidate.name || candidate.id) === key);
+      if (control) writeDraftControl(control, value);
+    });
+  });
+
+  const focus = snapshot.focus;
+  if (!focus?.formId || !focus.key) return;
+  const form = document.getElementById(focus.formId);
+  const control = form ? [...form.elements].find((candidate) => (candidate.name || candidate.id) === focus.key) : null;
+  if (!control) return;
+  control.focus({ preventScroll: true });
+  if (focus.selectionStart != null && control.setSelectionRange) {
+    const max = String(control.value || '').length;
+    control.setSelectionRange(
+      Math.min(focus.selectionStart, max),
+      Math.min(focus.selectionEnd ?? focus.selectionStart, max),
+      focus.selectionDirection
+    );
+  }
 }
 
 function getMyItem(type, predicate = () => true) {
@@ -227,7 +341,8 @@ function clientSwitchMarkup() {
   return `<div class="client-switch" role="group" aria-label="Select client"><button type="button" data-action="switch-client" data-client="breezy" class="${state.selectedClient === 'breezy' ? 'is-active' : ''}">Breezy Golf</button><button type="button" data-action="switch-client" data-client="kp" class="${state.selectedClient === 'kp' ? 'is-active' : ''}">KP Attorney</button></div>`;
 }
 
-function renderStage() {
+function renderStage({ preserveDraft = true } = {}) {
+  const draft = preserveDraft ? captureSceneDraft() : null;
   renderShellState();
   const renderers = [
     renderWelcome, renderFracture, renderDefinition, renderEcosystem, renderJourney,
@@ -236,7 +351,9 @@ function renderStage() {
   ];
   sceneRoot.innerHTML = renderers[state.stageIndex]?.() || renderWelcome();
   sceneRoot.dataset.stage = stage().id;
+  sceneRoot.dataset.renderContext = renderContext();
   bindStageSpecific();
+  restoreSceneDraft(draft);
   state.lastRender = Date.now();
 }
 
@@ -693,14 +810,27 @@ async function handleSceneSubmit(event) {
   const form = event.target;
   if (form.id === 'journey-form') {
     const data = Object.fromEntries(new FormData(form));
-    await safeAction(() => upsertItem({ item_type:'journey', client:data.client, stage:data.stage, platform:data.platform, payload:{ query:data.query, reason:data.reason, ownerName:state.profile?.name || 'Preview participant' } }), 'Journey moment added');
-    form.reset(); form.elements.client.value = state.selectedClient; return;
+    const saved = await safeAction(() => upsertItem({ item_type:'journey', client:data.client, stage:data.stage, platform:data.platform, payload:{ query:data.query, reason:data.reason, ownerName:state.profile?.name || 'Preview participant' } }), 'Journey moment added');
+    if (saved) {
+      form.reset();
+      form.elements.client.value = state.selectedClient;
+      state.suppressRender = false;
+      state.pendingRender = false;
+      renderStage({ preserveDraft: false });
+    }
+    return;
   }
   if (form.id === 'shock-form') {
     const data = Object.fromEntries(new FormData(form)); const shock = currentShock();
     const existing = getMyItem('shock', (item) => payloadOf(item).shockId === shock.id);
-    await safeAction(() => upsertItem({ id:existing?.id, item_type:'shock', client:data.client, stage:data.stage, dedupe_key:`${shock.id}:${currentUserId()}`, payload:{ shockId:shock.id, diagnosis:data.diagnosis, action:data.action, executionOwner:data.owner, measure:data.measure, ownerName:state.profile?.name || 'Preview participant' } }), 'Shock response submitted');
-    form.reset(); return;
+    const saved = await safeAction(() => upsertItem({ id:existing?.id, item_type:'shock', client:data.client, stage:data.stage, dedupe_key:`${shock.id}:${currentUserId()}`, payload:{ shockId:shock.id, diagnosis:data.diagnosis, action:data.action, executionOwner:data.owner, measure:data.measure, ownerName:state.profile?.name || 'Preview participant' } }), 'Shock response submitted');
+    if (saved) {
+      form.reset();
+      state.suppressRender = false;
+      state.pendingRender = false;
+      renderStage({ preserveDraft: false });
+    }
+    return;
   }
   if (form.id === 'challenge-form') {
     const data = Object.fromEntries(new FormData(form));
@@ -709,14 +839,28 @@ async function handleSceneSubmit(event) {
     const score = dimensions.reduce((sum,key)=>sum+Number(data[key]),0)/dimensions.length;
     const objection=currentObjection();
     const existing = getMyItem('rating', (item) => Number(payloadOf(item).objectionIndex) === objection.index && payloadOf(item).speakerId === data.speaker);
-    await safeAction(() => upsertItem({ id:existing?.id, item_type:'rating', dedupe_key:`${objection.index}:${data.speaker}:${currentUserId()}`, payload:{ objectionIndex:objection.index, speakerId:data.speaker, speakerName:option.dataset.name || option.textContent, speakerColor:option.dataset.color, score, dimensions:Object.fromEntries(dimensions.map((key)=>[key,Number(data[key])])), note:data.note, raterName:state.profile?.name || 'Preview participant' } }), 'Rating submitted');
-    form.reset(); $$('input[type=range]',form).forEach((input)=>{input.value=4; input.nextElementSibling.textContent='4';}); return;
+    const saved = await safeAction(() => upsertItem({ id:existing?.id, item_type:'rating', dedupe_key:`${objection.index}:${data.speaker}:${currentUserId()}`, payload:{ objectionIndex:objection.index, speakerId:data.speaker, speakerName:option.dataset.name || option.textContent, speakerColor:option.dataset.color, score, dimensions:Object.fromEntries(dimensions.map((key)=>[key,Number(data[key])])), note:data.note, raterName:state.profile?.name || 'Preview participant' } }), 'Rating submitted');
+    if (saved) {
+      form.reset();
+      $$('input[type=range]',form).forEach((input)=>{input.value=4; input.nextElementSibling.textContent='4';});
+      state.suppressRender = false;
+      state.pendingRender = false;
+      renderStage({ preserveDraft: false });
+    }
+    return;
   }
   if (form.id === 'takeaway-form') {
     const data = Object.fromEntries(new FormData(form));
     const existing = getMyItem('takeaway');
-    await safeAction(() => upsertItem({ id:existing?.id,item_type:'takeaway',dedupe_key:`takeaway:${currentUserId()}`,payload:{ takeaway:data.takeaway,confidence:state.confidence,ownerName:state.profile?.name || 'Preview participant' } }), 'Commitment added');
-    form.reset(); celebrate(); return;
+    const saved = await safeAction(() => upsertItem({ id:existing?.id,item_type:'takeaway',dedupe_key:`takeaway:${currentUserId()}`,payload:{ takeaway:data.takeaway,confidence:state.confidence,ownerName:state.profile?.name || 'Preview participant' } }), 'Commitment added');
+    if (saved) {
+      form.reset();
+      state.suppressRender = false;
+      state.pendingRender = false;
+      renderStage({ preserveDraft: false });
+      celebrate();
+    }
+    return;
   }
 }
 
@@ -982,8 +1126,15 @@ function wireGlobalEvents() {
   sceneRoot.addEventListener('click',handleSceneClick);
   sceneRoot.addEventListener('submit',handleSceneSubmit);
   sceneRoot.addEventListener('input',handleSceneInput);
-  sceneRoot.addEventListener('focusin',(event)=>{if(event.target.matches('input,textarea,select')&&!event.target.matches('[data-audit-filter],[data-audit-sort],[data-auction-signal],#confidence-slider,#challenge-form input[type=range]'))state.suppressRender=true;});
-  sceneRoot.addEventListener('focusout',(event)=>{if(event.target.matches('input,textarea,select'))setTimeout(()=>{state.suppressRender=false;scheduleRender();},80);});
+  sceneRoot.addEventListener('focusin',(event)=>{
+    if (isProtectedSceneEditor(event.target)) state.suppressRender = true;
+  });
+  sceneRoot.addEventListener('focusout',(event)=>{
+    if (!event.target.matches(EDITABLE_SELECTOR)) return;
+    // focusout fires before focusin when moving between controls. Waiting one task lets
+    // document.activeElement settle, so changing a dropdown never clears a text field.
+    setTimeout(updateSceneEditingLock, 0);
+  });
   stageRail.addEventListener('click',(event)=>{const button=event.target.closest('[data-stage-index]');if(button)goToStage(Number(button.dataset.stageIndex),isFacilitator());});
   $('#previous-stage').addEventListener('click',()=>goToStage(state.stageIndex-1,isFacilitator()));
   $('#next-stage').addEventListener('click',()=>{if(state.stageIndex<STAGES.length-1)goToStage(state.stageIndex+1,isFacilitator());else celebrate();});

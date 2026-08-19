@@ -258,6 +258,7 @@ class WorkshopRealtime extends EventTarget {
     const local = { ...row, created_at: this.items.get(row.id)?.created_at || row.updated_at };
     this.items.set(local.id, local);
     this.persistLocal('items');
+    this.emit('items', [...this.items.values()]);
     return local;
   }
 
