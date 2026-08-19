@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Search Everywhere Decision System</title>
+  <desc id="desc">A visual operating model connecting audience needs, search surfaces, machine-readable signals, and business outcomes across the decision journey.</desc>
+  <defs>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1d4ed8"/><stop offset="1" stop-color="#2f7bf6"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0c6e55"/><stop offset="1" stop-color="#22a87e"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8b5a12"/><stop offset="1" stop-color="#d49a32"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#13213a" flood-opacity=".12"/></filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#dce4f0" stroke-width="1" opacity=".48"/></pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#718096"/></marker>
+    <style>
+      text{font-family:Inter,Arial,sans-serif;fill:#172235}.eyebrow{font-size:18px;font-weight:800;letter-spacing:3px;fill:#2864dc}.title{font-size:58px;font-weight:820;letter-spacing:-2px}.subtitle{font-size:22px;fill:#64748b}.section{font-size:17px;font-weight:800;letter-spacing:1.5px}.nodeTitle{font-size:19px;font-weight:800}.nodeCopy{font-size:14px;fill:#64748b}.small{font-size:13px;fill:#718096}.journeyTitle{font-size:16px;font-weight:800}.journeyCopy{font-size:12px;fill:#64748b}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#f8fafc"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect x="44" y="38" width="1512" height="824" rx="30" fill="#fff" stroke="#d8e0ec"/>
+  <text x="92" y="98" class="eyebrow">LAMARK SEARCH EVERYWHERE</text>
+  <text x="92" y="161" class="title">The Decision Visibility System</text>
+  <text x="92" y="202" class="subtitle">People move across surfaces until uncertainty is low enough to act.</text>
+
+  <g transform="translate(92 255)">
+    <text x="0" y="0" class="section" fill="#172235">THE AUDIENCE JOURNEY</text>
+    <g transform="translate(0 28)">
+      <path d="M88 62 H1330" stroke="#b8c5d8" stroke-width="3" marker-end="url(#arrow)"/>
+      <g transform="translate(0 0)"><circle cx="56" cy="62" r="37" fill="url(#blue)"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">01</text><text x="0" y="125" class="journeyTitle">TRIGGER</text><text x="0" y="146" class="journeyCopy">A need appears.</text></g>
+      <g transform="translate(205 0)"><circle cx="56" cy="62" r="37" fill="#eef3ff" stroke="#7da7ff" stroke-width="2"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#2864dc">02</text><text x="0" y="125" class="journeyTitle">DEFINE</text><text x="0" y="146" class="journeyCopy">Frame the problem.</text></g>
+      <g transform="translate(410 0)"><circle cx="56" cy="62" r="37" fill="#eef3ff" stroke="#7da7ff" stroke-width="2"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#2864dc">03</text><text x="0" y="125" class="journeyTitle">OPTIONS</text><text x="0" y="146" class="journeyCopy">Generate choices.</text></g>
+      <g transform="translate(615 0)"><circle cx="56" cy="62" r="37" fill="#eefaf6" stroke="#6bc7a6" stroke-width="2"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#14775c">04</text><text x="0" y="125" class="journeyTitle">COMPARE</text><text x="0" y="146" class="journeyCopy">Evaluate differences.</text></g>
+      <g transform="translate(820 0)"><circle cx="56" cy="62" r="37" fill="#fff8ea" stroke="#d6ac58" stroke-width="2"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#9a6818">05</text><text x="0" y="125" class="journeyTitle">VALIDATE</text><text x="0" y="146" class="journeyCopy">Seek independent proof.</text></g>
+      <g transform="translate(1025 0)"><circle cx="56" cy="62" r="37" fill="url(#green)"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">06</text><text x="0" y="125" class="journeyTitle">ACT</text><text x="0" y="146" class="journeyCopy">Buy, call, visit, sign.</text></g>
+      <g transform="translate(1230 0)"><circle cx="56" cy="62" r="37" fill="url(#gold)"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">07</text><text x="0" y="125" class="journeyTitle">RETURN</text><text x="0" y="146" class="journeyCopy">Repeat and advocate.</text></g>
+    </g>
+  </g>
+
+  <g transform="translate(92 492)">
+    <text x="0" y="0" class="section">THE SYSTEM THAT SHAPES THE DECISION</text>
+    <g transform="translate(0 30)">
+      <rect width="440" height="258" rx="24" fill="#f3f7ff" stroke="#b8cdf8" filter="url(#shadow)"/>
+      <text x="28" y="40" class="eyebrow" font-size="14">1 · SEARCH SURFACES</text>
+      <text x="28" y="78" class="nodeTitle">Where the audience resolves uncertainty</text>
+      <g transform="translate(28 100)" class="small">
+        <rect width="116" height="38" rx="19" fill="#fff" stroke="#cad5e5"/><text x="58" y="24" text-anchor="middle">Google + Maps</text>
+        <rect x="126" width="83" height="38" rx="19" fill="#fff" stroke="#cad5e5"/><text x="167" y="24" text-anchor="middle">AI</text>
+        <rect x="219" width="92" height="38" rx="19" fill="#fff" stroke="#cad5e5"/><text x="265" y="24" text-anchor="middle">Reddit</text>
+        <rect x="321" width="91" height="38" rx="19" fill="#fff" stroke="#cad5e5"/><text x="366" y="24" text-anchor="middle">YouTube</text>
+        <rect y="50" width="108" height="38" rx="19" fill="#fff" stroke="#cad5e5"/><text x="54" y="74" text-anchor="middle">TikTok</text>
+        <rect x="118" y="50" width="112" height="38" rx="19" fill="#fff" stroke="#cad5e5"/><text x="174" y="74" text-anchor="middle">Reviews</text>
+        <rect x="240" y="50" width="172" height="38" rx="19" fill="#fff" stroke="#cad5e5"/><text x="326" y="74" text-anchor="middle">Brand website</text>
+      </g>
+      <text x="28" y="224" class="nodeCopy">Each surface has a different role, result format, and unit of trust.</text>
+    </g>
+
+    <path d="M460 159 H522" stroke="#718096" stroke-width="3" marker-end="url(#arrow)"/>
+
+    <g transform="translate(530 30)">
+      <rect width="440" height="258" rx="24" fill="#f2fbf7" stroke="#a9dbc7" filter="url(#shadow)"/>
+      <text x="28" y="40" class="eyebrow" font-size="14" fill="#14775c">2 · INTERPRETABLE SIGNALS</text>
+      <text x="28" y="78" class="nodeTitle">What people and systems can read</text>
+      <g transform="translate(28 100)" class="small">
+        <rect width="116" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="58" y="24" text-anchor="middle">Relevance</text>
+        <rect x="126" width="110" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="181" y="24" text-anchor="middle">Entities</text>
+        <rect x="246" width="166" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="329" y="24" text-anchor="middle">Reviews + proof</text>
+        <rect y="50" width="124" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="62" y="74" text-anchor="middle">Citations</text>
+        <rect x="134" y="50" width="144" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="206" y="74" text-anchor="middle">Local facts</text>
+        <rect x="288" y="50" width="124" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="350" y="74" text-anchor="middle">Experience</text>
+      </g>
+      <text x="28" y="224" class="nodeCopy">Strong signals reduce ambiguity, strengthen trust, and travel across platforms.</text>
+    </g>
+
+    <path d="M990 159 H1052" stroke="#718096" stroke-width="3" marker-end="url(#arrow)"/>
+
+    <g transform="translate(1060 30)">
+      <rect width="440" height="258" rx="24" fill="#fff9ef" stroke="#e1c689" filter="url(#shadow)"/>
+      <text x="28" y="40" class="eyebrow" font-size="14" fill="#9a6818">3 · BUSINESS OUTCOMES</text>
+      <text x="28" y="78" class="nodeTitle">What the client needs the system to change</text>
+      <g transform="translate(28 100)" class="small">
+        <rect width="116" height="38" rx="19" fill="#fff" stroke="#e2d3b5"/><text x="58" y="24" text-anchor="middle">Visibility</text>
+        <rect x="126" width="110" height="38" rx="19" fill="#fff" stroke="#e2d3b5"/><text x="181" y="24" text-anchor="middle">Trust</text>
+        <rect x="246" width="166" height="38" rx="19" fill="#fff" stroke="#e2d3b5"/><text x="329" y="24" text-anchor="middle">Qualified action</text>
+        <rect y="50" width="124" height="38" rx="19" fill="#fff" stroke="#e2d3b5"/><text x="62" y="74" text-anchor="middle">Revenue</text>
+        <rect x="134" y="50" width="144" height="38" rx="19" fill="#fff" stroke="#e2d3b5"/><text x="206" y="74" text-anchor="middle">Lead quality</text>
+        <rect x="288" y="50" width="124" height="38" rx="19" fill="#fff" stroke="#e2d3b5"/><text x="350" y="74" text-anchor="middle">Retention</text>
+      </g>
+      <text x="28" y="224" class="nodeCopy">Measure platform-native signals and the business result, without false attribution.</text>
+    </g>
+  </g>
+
+  <text x="92" y="831" class="small">Lamark operating principle: diagnose the full search journey, advise on the required signals and assets, and coordinate execution with the teams that own it.</text>
+  <text x="1508" y="831" text-anchor="end" class="small">Search Everywhere · Decision Visibility</text>
+</svg>
