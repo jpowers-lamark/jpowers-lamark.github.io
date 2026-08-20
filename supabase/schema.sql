@@ -32,7 +32,8 @@ create table if not exists public.workshop_items (
   id uuid primary key default gen_random_uuid(),
   room_id uuid not null references public.workshop_rooms(id) on delete cascade,
   item_type text not null check (item_type in (
-    'poll','journey','board','audit','auction','connection','shock','strategy','rating','takeaway','challenge','activity'
+    'poll','cognitive_profile','knowledge_answer','journey_prediction','journey','board','audit','wheel_response',
+    'auction','connection','shock','strategy','rating','takeaway','challenge','activity'
   )),
   owner_id uuid not null references auth.users(id) on delete cascade,
   client text check (client is null or client in ('breezy','kp','both')),

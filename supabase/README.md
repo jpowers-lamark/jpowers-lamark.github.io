@@ -1,39 +1,61 @@
-# Supabase Setup
+# Supabase Setup and v3 Migration
 
 ## Files
 
-- `schema.sql` creates the workshop tables, RPCs, indexes, Row Level Security policies, grants, and Realtime publication entries.
-- `cleanup.sql` removes expired workshop rooms and dependent session data.
+- `schema.sql` creates a new Search Everywhere workshop database from the beginning.
+- `v3-upgrade.sql` updates an existing production database to accept the new v3 activity records.
+- `cleanup.sql` removes expired workshop rooms and dependent session data when intentionally run.
 
-## Required project setting
+## Existing production installation
 
-Enable **Anonymous Sign-Ins** in Supabase Authentication. Anonymous users still receive authenticated identities, which allows the Row Level Security policies to scope reads and writes to workshop membership.
+For an existing live installation, run `v3-upgrade.sql` once through the Supabase browser SQL Editor before uploading the v3 website files.
+
+The migration is non-destructive. It replaces only the `workshop_items_item_type_check` constraint so the database accepts:
+
+- `cognitive_profile`
+- `knowledge_answer`
+- `journey_prediction`
+- `wheel_response`
+
+It preserves existing rooms, members, cards, votes, findings, allocations, strategies, ratings, and takeaways.
+
+## Required authentication setting
+
+Enable **Anonymous Sign-Ins** in Supabase Authentication. Anonymous users receive authenticated identities, allowing Row Level Security to restrict access by workshop membership.
 
 ## Browser configuration
 
-Use only the project URL and publishable browser key in `assets/config.js`. Never use the service-role key in client-side code.
+Use only the Supabase project URL and publishable key in `assets/config.js`.
+
+Never place any of the following in browser code or a public repository:
+
+- Secret key
+- Service-role key
+- Database password
+- Client credentials
 
 ## Tables
 
 | Table | Purpose |
 |---|---|
-| `workshop_rooms` | Facilitator, active stage, active client, timer, room settings |
-| `workshop_members` | Participant identity, team, role, display color |
-| `workshop_items` | Polls, journey entries, evidence, audit findings, allocations, responses, strategy, ratings, takeaways |
-| `workshop_votes` | One participant vote per target |
+| `workshop_rooms` | Facilitator, stage, client, timer, settings, room status |
+| `workshop_members` | Participant identity, role, team, display color |
+| `workshop_items` | Shared responses, evidence, cards, allocations, chains, strategies, ratings, commitments |
+| `workshop_votes` | Participant votes by room and target |
 
-## Realtime channels
+## Realtime behavior
 
-The application uses room-specific channels. Presence and Broadcast events are ephemeral. Persistent records are synchronized through Postgres Changes.
+Persistent changes use Postgres Changes. Presence, cursors, reactions, and drag previews use room-specific realtime channels.
 
-## Recommended production checks
+## Production checks
 
-- Confirm Row Level Security is enabled on all four tables.
-- Confirm anonymous sign-ins are enabled.
-- Confirm the `supabase_realtime` publication contains rooms, items, and votes.
-- Confirm no service-role key appears in the repository.
-- Test joining with an invalid code.
-- Test the 12-participant cap.
-- Test that one participant cannot update another participant’s item.
-- Test that only the facilitator can change the room stage.
-- Set a session-retention policy and run cleanup routinely.
+- Row Level Security is enabled on all workshop tables.
+- Anonymous sign-ins are enabled.
+- Realtime publication includes rooms, items, and votes.
+- `v3-upgrade.sql` has run successfully.
+- No service-role or secret key appears in the repository.
+- Invalid room codes are rejected.
+- The participant cap is enforced.
+- Only facilitators can change facilitator-controlled stage state.
+- New v3 activities save and appear on a second computer.
+- Cleanup is run only according to the agreed retention policy.
