@@ -1,181 +1,110 @@
-# Facilitator Guide
+# Facilitator Guide: Search Everywhere Learning Lab v2
 
-## Facilitation objective
+## Recommended length
 
-The facilitator’s job is to keep the room focused on audience decisions rather than platform novelty. The session should feel active and challenging, but the outputs must remain evidence-based and usable in client work.
+Approximately 150 minutes for 6–8 participants. A 100–115 minute version can skip the optional reference audit and shorten the roadmap discussion.
 
-## Preparation, 3–5 days before
+## Learning outcome
 
-- Confirm the production site is loading.
-- Create a test room and join from two devices.
-- Verify cursor, stage, poll, whiteboard, vote, and export behavior.
-- Review Breezy and KP seed findings for anything that has changed publicly.
-- Decide whether the client names may be shown internally.
-- Assign squads or prepare random assignment.
-- Confirm room display, Wi-Fi, and laptop access.
-- Prepare a backup hotspot.
-- Decide who will capture follow-up actions after the session.
+By the end, every participant should be able to:
 
-## Preparation, 15 minutes before
+1. Explain Search Everywhere as audience-centered search behavior, not organic social execution.
+2. Describe how uncertainty creates an iterative search process.
+3. Use the five-phase journey: Spark, Search, Compare, Prove, Act & Echo.
+4. Match a search moment to the surface best suited to resolve it.
+5. Connect human trust cues with machine-readable evidence and business outcomes.
+6. Turn one audience insight into one manageable roadmap move.
+7. Answer a client objection in plain language.
 
-1. Open the application on the room display.
-2. Create the live room.
-3. Copy the invite link and room code.
-4. Open the facilitator controls.
-5. Confirm the timer is clear.
-6. Join from a second device as a participant.
-7. Confirm the browser zoom is 90–100% on the room display.
-8. Close unrelated tabs and notifications.
-9. Keep the CSV export location available.
+## Live sequence
 
-## Recommended room tone
+### Welcome: The Search Fracture, 8 minutes
 
-- Direct and curious
-- Competitive without becoming theatrical
-- Evidence-first
-- Comfortable challenging unsupported assumptions
-- Client-oriented
-- Clear about what Lamark owns, recommends, and hands off
+- Ask everyone to join the room.
+- Launch the opening poll.
+- Do not define Search Everywhere until the room sees that its own first-search behavior is fragmented.
+- Teaching line: “People do not care which team owns the answer. They search until uncertainty is resolved.”
 
-## Facilitation techniques
+### Act I: Search Psychology, 12 minutes
 
-### Prevent platform checklists
+- Click through the six mental actions.
+- Emphasize that it is an iterative information-seeking model, not a rigid funnel or a neurological diagnosis.
+- Run two knowledge-check scenarios.
 
-When someone says, “The client should be on TikTok,” ask:
+### Act II: Five-Phase Journey, 18 minutes
 
-- Which audience segment?
-- At which journey stage?
-- What are they searching for?
-- What evidence must the platform provide?
-- What business result can change?
-- Who would execute the recommendation?
+- Explain one phase at a time.
+- Use Breezy and K&P examples for contrast.
+- Have the room place three short scenarios.
+- Teaching line: “The journey phase describes the job. The platform describes where the job is happening.”
 
-### Prevent false certainty
+### Act III: Search Surfaces, 12 minutes
 
-When evidence is limited, require one of three confidence labels:
+- Review the surface atlas.
+- Run four match moments.
+- Ask why a different platform could become relevant later in the same journey.
 
-- Confirmed
-- Directional
-- Hypothesis
+### Live Game: Participant Wheel, 18 minutes
 
-A weak platform dataset does not make the audience behavior irrelevant. It changes the certainty and the measurement plan.
+- Select one category per spin.
+- The wheel cycles through joined participants before repeating names.
+- Keep answers under 60 seconds.
+- Let the room rate clarity, not charisma.
+- Use “Roadmap Move” only after the journey and platform concepts are understood.
 
-### Prevent Google-only thinking
+### Act IV: Resource Tradeoffs, 15 minutes
 
-Ask what happens before the Google query and what the user checks after the result. Then ask whether the journey can end in Maps, an AI answer, a review platform, a video, or a community thread.
+- Assign half the room to Breezy and half to K&P.
+- Everyone must total exactly 100 credits.
+- Save the allocations.
+- Compare the room aggregates and ask why the two clients differ.
+- Teaching line: “Search Everywhere is a prioritization model. Equal allocation is usually a sign we have not made a strategic decision.”
 
-### Prevent scope confusion
+### Act V: Client Micro-Missions, 16 minutes
 
-Use this phrasing:
+- Each participant answers one assigned scenario.
+- Require only one explanatory sentence.
+- Use the shared wall to compare patterns.
+- Open the reference audit only if the team needs more evidence or examples.
 
-> SEO is responsible for diagnosing the search behavior and advising on the visibility and trust system. Execution may sit with SEO, content, local, PR, social, creative, UX, development, analytics, or the client.
+### Act VI: Human, Machine, Business, 12 minutes
 
-### Keep all participants active
+- Each participant connects one human cue, one machine-readable signal, and one business result.
+- Ask where execution ownership would sit.
+- Clarify that SEO may consult or coordinate without owning every channel.
 
-- Rotate roles after the client portal stage.
-- Ask the quietest participant to defend a finding.
-- Require one contribution before a participant may vote.
-- Use the participant roster to monitor who has not spoken.
-- Assign the Client Translator role to technical participants.
+### Act VII: Shared Roadmap Wall, 18 minutes
 
-## Evidence standards
+- Each person creates exactly one roadmap move.
+- Cards should be specific enough to execute but small enough to understand quickly.
+- Participants vote for the moves with the strongest audience and business logic.
+- Auto-organize after everyone submits.
 
-### Strong evidence
+### Final Round: Client Challenge, 12 minutes
 
-- First-party analytics
-- Native platform data
-- Direct search-result observation
-- Official client information
-- Clear user reviews or community language with context
-- Repeated patterns across several sources
+- Each participant answers one objection.
+- Rate language based on clarity and usefulness.
+- Reinforce the best phrases for future client conversations.
 
-### Directional evidence
+### Close: Make It Operational, 9 minutes
 
-- Third-party estimates
-- Small review samples
-- Public social observations
-- Competitor behavior
-- A limited number of community threads
+- Everyone submits the three closing prompts.
+- Export the room CSV and JSON backup.
+- Name one client account where the framework will be applied next.
 
-### Hypothesis
+## Participation rules
 
-- Inferred audience behavior without direct data
-- Platform assumptions based on broad demographic patterns
-- Recommendations that require validation through testing
+- No one speaks twice until everyone has spoken once.
+- No finding is treated as confirmed without evidence.
+- No platform is recommended merely because it is popular.
+- Every recommendation must identify a user moment and expected effect.
+- Each participant adds one roadmap card, not a full roadmap.
+- Offsite recommendations must identify the likely execution owner.
 
-## Reddit and community evidence
+## Suggested team split
 
-Reddit is useful for language, objections, comparisons, and lived experience. It is not automatically representative of the full client audience.
+For 6 participants: 3 Breezy, 3 K&P.
 
-For Breezy and KP, direct brand-specific Reddit evidence may be limited. Treat absence as a finding:
+For 7 participants: 3 Breezy, 3 K&P, 1 rotating observer/facilitator assistant.
 
-- The brand may have limited community visibility.
-- Public search may not surface enough evidence to support a strong conclusion.
-- A listening and monitoring process may be more appropriate than immediate brand participation.
-
-Never present one thread as market consensus.
-
-## Technical controls
-
-### Stage control
-
-Only the facilitator can change the shared active stage. Participants may turn off Follow Facilitator to inspect another stage, then turn it back on to rejoin the room.
-
-### Timer
-
-Use the timer for activities, not for teaching transitions. Pause when the room needs a decision rather than allowing the timer to force a weak output.
-
-### Participant roster
-
-Use the roster to confirm:
-
-- Everyone joined successfully.
-- Team assignments are balanced.
-- Remote participants are still present.
-
-### CSV export
-
-Export at the end and again after any major post-session cleanup. The CSV contains audit, journey, evidence, strategy, shock-response, and takeaway records.
-
-## Contingency plan
-
-### Supabase unavailable
-
-- Continue in preview mode on the facilitator screen.
-- Ask participants to work in pairs and report findings verbally.
-- Record the most important outputs in one browser.
-- Do not claim multi-device changes were saved.
-
-### Participant cannot join
-
-- Confirm the room code contains no `0`, `1`, `I`, or `O` confusion.
-- Ask the participant to open the full invite link.
-- Confirm anonymous sign-ins are enabled.
-- Check whether the room reached the 12-person cap.
-
-### Cursor is delayed
-
-Cursor lag does not affect persistent evidence. Continue the activity and rely on saved cards, votes, and findings.
-
-### A public fact has changed
-
-Edit or add a live audit finding with the new evidence. Label the seed finding as outdated in the discussion and correct it before external use.
-
-### Session runs long
-
-Compress in this order:
-
-1. Shorten Client Portals to three minutes.
-2. Use one Search Shock for the whole room.
-3. Limit Client Challenge to one objection per person.
-4. Keep Audit Command Center and Strategy War Room intact.
-
-## Post-workshop
-
-- Export the CSV.
-- Save the top three initiatives for each client.
-- Record unresolved evidence questions.
-- Assign owners and due dates outside the workshop application.
-- Delete or archive sensitive session data according to the agreed retention period.
-- Update the seed audit only after facts are verified.
-- Ask the team where the framework should be applied next.
+For 8 participants: 4 Breezy, 4 K&P.
