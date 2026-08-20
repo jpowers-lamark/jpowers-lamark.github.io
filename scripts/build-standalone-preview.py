@@ -25,7 +25,7 @@ html = re.sub(r'<link rel="manifest"[^>]+>\s*', "", html)
 html = re.sub(r'<link rel="icon"[^>]+>\s*', "", html)
 html = re.sub(r'<link rel="stylesheet"[^>]+>\s*', "", html)
 html = re.sub(r'<script src="\.\/assets\/config\.js"></script>\s*', "", html)
-html = re.sub(r'<script type="module" src="\.\/assets\/app\.js"></script>\s*', "", html)
+html = re.sub(r'<script type="module" src="\.\/assets\/app\.js(?:\?[^"]*)?"></script>\s*', "", html)
 html = re.sub(r'<meta property="og:image"[^>]+>\s*', "", html)
 
 favicon_data = base64.b64encode(favicon).decode("ascii")
@@ -33,7 +33,8 @@ html = html.replace("</head>", f'<link rel="icon" href="data:image/svg+xml;base6
 
 data = re.sub(r"^export const ", "const ", data, flags=re.M)
 keys = [
-    "STAGES", "JOURNEY_STAGES", "PLATFORMS", "SIGNALS", "CLIENTS",
+    "STAGES", "JOURNEY_STAGES", "COGNITIVE_STATES", "COGNITIVE_SCENARIOS",
+    "KNOWLEDGE_CHECKS", "WHEEL_CHALLENGES", "PLATFORMS", "SIGNALS", "CLIENTS",
     "SHOCKS", "OBJECTIONS", "HUMAN_SIGNALS", "SAMPLE_JOURNEYS",
     "SEED_AUDIT_ROWS", "SOURCES",
 ]
@@ -57,14 +58,15 @@ app = app.replace(
     "// Offline preview opens directly. Use the GitHub Pages deployment for live rooms.",
 )
 app = (
-    "const {STAGES,JOURNEY_STAGES,PLATFORMS,SIGNALS,CLIENTS,SHOCKS,OBJECTIONS,"
-    "HUMAN_SIGNALS,SAMPLE_JOURNEYS,SEED_AUDIT_ROWS,SOURCES}=window.__SE_DATA;\n"
+    "const {STAGES,JOURNEY_STAGES,COGNITIVE_STATES,COGNITIVE_SCENARIOS,KNOWLEDGE_CHECKS,"
+    "WHEEL_CHALLENGES,PLATFORMS,SIGNALS,CLIENTS,SHOCKS,OBJECTIONS,HUMAN_SIGNALS,"
+    "SAMPLE_JOURNEYS,SEED_AUDIT_ROWS,SOURCES}=window.__SE_DATA;\n"
     "const {realtime,randomId,normalizeCode}=window.__SE_RT;\n" + app
 )
 
 bundle = (
     "window.SE_CONFIG={supabaseUrl:'',supabaseAnonKey:'',enableDemoFallback:true,"
-    "appName:'Lamark Search Everywhere Lab',defaultStageSeconds:480,maxParticipants:12,debug:false};\n"
+    "appName:'Lamark Search Everywhere Experience Lab',defaultStageSeconds:480,maxParticipants:12,debug:false};\n"
     + data_bundle + "\n" + realtime_bundle + "\n" + app
 )
 bundle = bundle.replace("</script", "<\\/script")

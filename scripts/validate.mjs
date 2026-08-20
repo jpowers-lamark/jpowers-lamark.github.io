@@ -12,9 +12,9 @@ const passes = [];
 const requiredFiles = [
   'index.html', '404.html', '.nojekyll', 'manifest.webmanifest', 'robots.txt',
   'assets/app.js', 'assets/config.js', 'assets/data.js', 'assets/realtime.js', 'assets/styles.css', 'assets/favicon.svg', 'assets/search-everywhere-operating-model.svg', 'assets/og-search-everywhere.jpg',
-  'supabase/schema.sql', 'supabase/cleanup.sql', 'supabase/README.md',
+  'supabase/schema.sql', 'supabase/v3-upgrade.sql', 'supabase/cleanup.sql', 'supabase/README.md',
   'README.md', 'BACKUP_AND_DEPLOY.md',
-  'docs/ARCHITECTURE.md', 'docs/DEPLOYMENT.md', 'docs/FACILITATOR_GUIDE.md', 'docs/WORKSHOP_RUN_OF_SHOW.md', 'docs/AUDIT_METHOD.md', 'docs/QA_REPORT.md',
+  'docs/ARCHITECTURE.md', 'docs/DEPLOYMENT.md', 'docs/FACILITATOR_GUIDE.md', 'docs/WORKSHOP_RUN_OF_SHOW.md', 'docs/AUDIT_METHOD.md', 'docs/RESEARCH_BASIS.md', 'docs/QA_REPORT.md',
   '.github/workflows/pages.yml', 'Search_Everywhere_Lab_Standalone_Preview.html', 'scripts/install-into-repo.sh'
 ];
 
@@ -74,14 +74,14 @@ for (const htmlFile of htmlFiles) {
 const css = await readFile(path.join(root, 'assets/styles.css'), 'utf8');
 for (const match of css.matchAll(/url\((['"]?)([^)'"\s]+)\1\)/g)) {
   const ref = match[2];
-  if (/^(?:https?:|data:)/.test(ref)) continue;
+  if (/^(?:https?:|data:|#)/.test(ref)) continue;
   const resolved = path.normalize(path.join('assets', ref));
   (await exists(resolved)) ? ok(`CSS reference resolves: ${ref}`) : fail(`CSS reference missing: ${ref}`);
 }
 
 const dataUrl = pathToFileURL(path.join(root, 'assets/data.js')).href + `?validate=${Date.now()}`;
 const data = await import(dataUrl);
-const expected = { stages: 14, audit: 55, breezy: 24, kp: 31 };
+const expected = { stages: 16, audit: 55, breezy: 24, kp: 31 };
 const actual = {
   stages: data.STAGES.length,
   audit: data.SEED_AUDIT_ROWS.length,
@@ -106,7 +106,7 @@ for (const [label, collection] of [
 }
 
 const validStageIds = new Set(data.STAGES.map((item) => item.id));
-const expectedStageIds = ['welcome','fracture','definition','ecosystem','journey','portals','audit','whiteboard','auction','dualvision','shock','strategy','challenge','debrief'];
+const expectedStageIds = ['welcome','fracture','cognition','definition','ecosystem','journey','portals','audit','whiteboard','wheel','auction','dualvision','shock','strategy','challenge','debrief'];
 for (const id of expectedStageIds) {
   validStageIds.has(id) ? ok(`Stage registered: ${id}`) : fail(`Stage not registered: ${id}`);
 }
@@ -135,7 +135,11 @@ const realtimeText = await readFile(path.join(root, 'assets/realtime.js'), 'utf8
 const schemaText = await readFile(path.join(root, 'supabase/schema.sql'), 'utf8');
 const capabilityChecks = [
   ['poll activity', 'fracture-choice', appText],
-  ['journey builder', 'journey-add', appText],
+  ['Cognitive Search Reactor', 'renderCognition', appText],
+  ['knowledge checks', 'knowledge-answer', appText],
+  ['journey prediction', 'journey-predict', appText],
+  ['journey transition lab', 'journey-insight-form', appText],
+  ['participant wheel', 'renderWheel', appText],
   ['audit command center', 'renderAudit', appText],
   ['evidence whiteboard', 'renderWhiteboard', appText],
   ['Signal Auction', 'renderAuction', appText],
@@ -153,6 +157,14 @@ const capabilityChecks = [
 ];
 for (const [label, needle, haystack] of capabilityChecks) {
   haystack.includes(needle) ? ok(`Capability present: ${label}`) : fail(`Capability missing: ${label}`);
+}
+
+for (const itemType of ['cognitive_profile','knowledge_answer','journey_prediction','wheel_response']) {
+  schemaText.includes(`'${itemType}'`) ? ok(`Schema accepts v3 item type: ${itemType}`) : fail(`Schema missing v3 item type: ${itemType}`);
+}
+const upgradeText = await readFile(path.join(root, 'supabase/v3-upgrade.sql'), 'utf8');
+for (const itemType of ['cognitive_profile','knowledge_answer','journey_prediction','wheel_response']) {
+  upgradeText.includes(`'${itemType}'`) ? ok(`Upgrade migration accepts: ${itemType}`) : fail(`Upgrade migration missing: ${itemType}`);
 }
 
 const configText = await readFile(path.join(root, 'assets/config.js'), 'utf8');
