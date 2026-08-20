@@ -1,168 +1,84 @@
 export const STAGES = [
-  {
-    "id": "welcome",
-    "number": "00",
-    "kicker": "ARRIVAL",
-    "title": "Enter the Lab",
-    "duration": 180,
-    "purpose": "Join the room, understand the rules, and see who is participating."
-  },
-  {
-    "id": "fracture",
-    "number": "01",
-    "kicker": "ACT I",
-    "title": "The Search Fracture",
-    "duration": 480,
-    "purpose": "Make fragmented search behavior visible through the team’s own responses."
-  },
-  {
-    "id": "definition",
-    "number": "02",
-    "kicker": "ACT I",
-    "title": "What Search Everywhere Means",
-    "duration": 420,
-    "purpose": "Reframe search as decision behavior rather than a single channel."
-  },
-  {
-    "id": "ecosystem",
-    "number": "03",
-    "kicker": "ACT II",
-    "title": "The Search Ecosystem",
-    "duration": 540,
-    "purpose": "Understand the role each search surface plays and the signals it reads."
-  },
-  {
-    "id": "journey",
-    "number": "04",
-    "kicker": "ACT II",
-    "title": "Journey Builder",
-    "duration": 900,
-    "purpose": "Build the complete path from trigger through action and advocacy."
-  },
-  {
-    "id": "portals",
-    "number": "05",
-    "kicker": "ACT III",
-    "title": "Client Portals",
-    "duration": 420,
-    "purpose": "See how the same framework changes across ecommerce and legal search."
-  },
-  {
-    "id": "audit",
-    "number": "06",
-    "kicker": "ACT III",
-    "title": "Audit Command Center",
-    "duration": 1200,
-    "purpose": "Collect, filter, score, and challenge evidence across search surfaces."
-  },
-  {
-    "id": "whiteboard",
-    "number": "07",
-    "kicker": "ACT III",
-    "title": "Evidence Whiteboard",
-    "duration": 720,
-    "purpose": "Place evidence, gaps, questions, and actions onto the shared journey."
-  },
-  {
-    "id": "auction",
-    "number": "08",
-    "kicker": "ACT IV",
-    "title": "Signal Auction",
-    "duration": 600,
-    "purpose": "Allocate limited resources and learn why platforms reward different signals."
-  },
-  {
-    "id": "dualvision",
-    "number": "09",
-    "kicker": "ACT IV",
-    "title": "Human + Machine View",
-    "duration": 720,
-    "purpose": "Connect what people experience to what search and recommendation systems can interpret."
-  },
-  {
-    "id": "shock",
-    "number": "10",
-    "kicker": "ACT IV",
-    "title": "Search Shock",
-    "duration": 600,
-    "purpose": "Respond to an unexpected change in the search ecosystem."
-  },
-  {
-    "id": "strategy",
-    "number": "11",
-    "kicker": "ACT V",
-    "title": "Strategy War Room",
-    "duration": 900,
-    "purpose": "Select, score, and defend the initiatives that should move first."
-  },
-  {
-    "id": "challenge",
-    "number": "12",
-    "kicker": "ACT V",
-    "title": "Client Challenge",
-    "duration": 600,
-    "purpose": "Teach the model back clearly under pressure."
-  },
-  {
-    "id": "debrief",
-    "number": "13",
-    "kicker": "FINAL ACT",
-    "title": "Lock In the Operating Model",
-    "duration": 420,
-    "purpose": "Capture commitments, confidence, and the next application."
-  }
+  { id:'welcome', number:'00', kicker:'ARRIVAL', title:'Enter Mission Control', duration:300, purpose:'Enter the live environment and establish the operating premise.' },
+  { id:'fracture', number:'01', kicker:'ACT I', title:'The Search Fracture', duration:420, purpose:'Make fragmented search behavior visible through the room’s own choices.' },
+  { id:'cognition', number:'02', kicker:'ACT I', title:'The Cognitive Search Reactor', duration:900, purpose:'Understand the cognitive states that shape questions, surface choice, credibility, and stopping behavior.' },
+  { id:'definition', number:'03', kicker:'ACT I', title:'What Search Everywhere Means', duration:420, purpose:'Establish the professional operating definition and Lamark consulting boundary.' },
+  { id:'ecosystem', number:'04', kicker:'ACT I', title:'The Search Ecosystem', duration:480, purpose:'Understand the role and signal logic of each search surface.' },
+  { id:'journey', number:'05', kicker:'ACT II', title:'The Decision Journey Simulator', duration:900, purpose:'Model how uncertainty, confidence, and evidence needs change across a nonlinear decision path.' },
+  { id:'portals', number:'06', kicker:'ACT III', title:'Client Portals', duration:300, purpose:'Contrast an ecommerce decision system with a high-stakes legal decision system.' },
+  { id:'audit', number:'07', kicker:'ACT III', title:'Audit Command Center', duration:600, purpose:'Inspect and challenge a worked cross-surface evidence system.' },
+  { id:'whiteboard', number:'08', kicker:'ACT III', title:'Evidence Whiteboard', duration:600, purpose:'Build a shared map of evidence, gaps, signal conflicts, questions, and opportunities.' },
+  { id:'wheel', number:'09', kicker:'LIVE ARENA', title:'The Operator Selector', duration:600, purpose:'Select participants for rapid strategic challenges and score the resulting reasoning.' },
+  { id:'auction', number:'10', kicker:'ACT IV', title:'Signal Auction', duration:600, purpose:'Allocate constrained resources and compare strategic assumptions room-wide.' },
+  { id:'dualvision', number:'11', kicker:'ACT IV', title:'Human + Machine Signal Decoder', duration:540, purpose:'Translate human perceptions into observable evidence, machine-readable signals, and business outcomes.' },
+  { id:'shock', number:'12', kicker:'ACT IV', title:'Search Shock', duration:480, purpose:'Respond to a sudden change in the decision environment.' },
+  { id:'strategy', number:'13', kicker:'ACT V', title:'Strategy War Room', duration:840, purpose:'Score, vote, sequence, and defend the initiatives that should move first.' },
+  { id:'challenge', number:'14', kicker:'ACT V', title:'Client Challenge', duration:600, purpose:'Explain the model clearly under realistic client pressure.' },
+  { id:'debrief', number:'15', kicker:'FINAL ACT', title:'Lock In the Operating System', duration:540, purpose:'Consolidate learning, export decisions, and commit to the next application.' }
 ];
 
 export const JOURNEY_STAGES = [
-  {
-    "id": "trigger",
-    "label": "Trigger",
-    "description": "A need, problem, desire, or event creates uncertainty.",
-    "exampleBreezy": "A trip, tournament, creator clip, or new style creates product interest.",
-    "exampleKp": "A claim denial, accident, storm, or insurer dispute creates urgent need."
-  },
-  {
-    "id": "ask",
-    "label": "Ask",
-    "description": "The person frames the question in their own language.",
-    "exampleBreezy": "What should I wear for a hot golf trip?",
-    "exampleKp": "What should I do after an underpaid insurance claim?"
-  },
-  {
-    "id": "scan",
-    "label": "Scan",
-    "description": "They generate possible answers, brands, products, or providers.",
-    "exampleBreezy": "Google, Shopping, TikTok, Instagram, and creator content surface options.",
-    "exampleKp": "Google, AI answers, Maps, directories, and referrals surface firms."
-  },
-  {
-    "id": "compare",
-    "label": "Compare",
-    "description": "They evaluate differences, fit, price, expertise, location, or process.",
-    "exampleBreezy": "Compare products, fabrics, fit, price, shipping, and alternatives.",
-    "exampleKp": "Compare practices, offices, attorneys, fees, reviews, and claim experience."
-  },
-  {
-    "id": "validate",
-    "label": "Validate",
-    "description": "They seek independent proof and reassurance.",
-    "exampleBreezy": "Reddit, reviews, YouTube, customer photos, and creator credibility.",
-    "exampleKp": "Reviews, case proof, attorney credentials, Reddit, local signals, and third-party mentions."
-  },
-  {
-    "id": "act",
-    "label": "Act",
-    "description": "They complete the business action.",
-    "exampleBreezy": "Purchase, add to cart, subscribe, or visit a product page.",
-    "exampleKp": "Call, submit a form, request a consultation, or visit an office."
-  },
-  {
-    "id": "share",
-    "label": "Learn / Share",
-    "description": "They return, review, recommend, or continue the relationship.",
-    "exampleBreezy": "Repeat purchase, branded search, review, or social sharing.",
-    "exampleKp": "Case updates, referrals, reviews, and ongoing informational search."
-  }
+  { id:'trigger', label:'Trigger', function:'Recognition', mentalTask:'Recognize that the current state is no longer sufficient.', question:'Something changed. Does it require attention?', evidence:'A visible problem, desire, deadline, recommendation, event, or discrepancy.', surfaceRole:'Often begins outside explicit search, then creates the first information need.', description:'A need, problem, desire, event, or contradiction creates uncertainty.', exampleBreezy:'A creator clip, trip, tournament, product drop, or fit problem creates interest.', exampleKp:'An accident, storm, denied claim, disputed liability, or referral creates urgency.' },
+  { id:'ask', label:'Ask', function:'Orientation', mentalTask:'Translate an incomplete information need into language a system or person can respond to.', question:'What is happening, and how should I describe it?', evidence:'Definitions, category language, symptom or problem framing, and initial options.', surfaceRole:'Google and AI often help name the problem, while social and community cues influence wording.', description:'The person begins expressing the need, often imprecisely.', exampleBreezy:'“Best golf polos for hot weather” or “Breezy Golf sizing.”', exampleKp:'“What do I do after an underpaid property claim?”' },
+  { id:'scan', label:'Scan', function:'Option generation', mentalTask:'Generate a workable set of answers, brands, products, professionals, or routes.', question:'What credible options exist?', evidence:'Relevant results, recognizable entities, clear categories, and strong information scent.', surfaceRole:'Search, AI, shopping, local, video, directories, and social surfaces create the option set.', description:'The person scans quickly for promising paths and recognizable cues.', exampleBreezy:'Google Shopping, category results, Instagram, TikTok, and creator content surface options.', exampleKp:'Google, AI answers, Maps, legal directories, and referrals surface firms.' },
+  { id:'compare', label:'Compare', function:'Tradeoff evaluation', mentalTask:'Determine which differences matter for the situation.', question:'Which option best fits my criteria and constraints?', evidence:'Specific attributes, price, fit, process, expertise, availability, and alternatives.', surfaceRole:'Owned pages, comparison content, video, shopping, Maps, and directories clarify differences.', description:'The person evaluates meaningful tradeoffs rather than collecting more options.', exampleBreezy:'Compare fabric, fit, price, shipping, style, reviews, and alternatives.', exampleKp:'Compare practice focus, location, attorneys, case process, reviews, and fees.' },
+  { id:'validate', label:'Validate', function:'Risk reduction', mentalTask:'Test whether claims are credible enough to support action.', question:'What independent evidence supports this choice?', evidence:'Reviews, reputation, first-hand experience, credentials, citations, consistency, and consensus.', surfaceRole:'Reddit, reviews, YouTube, third-party sources, Maps, and branded validation searches carry weight.', description:'The person seeks corroboration and tests credibility.', exampleBreezy:'Reddit, customer photos, product reviews, creator demonstrations, and YouTube reduce fit or quality risk.', exampleKp:'Reviews, attorney credentials, office consistency, case proof, community discussion, and third-party mentions reduce trust risk.' },
+  { id:'act', label:'Act', function:'Commitment', mentalTask:'Choose a next step with acceptable risk and effort.', question:'Is the expected value of acting now greater than waiting or searching more?', evidence:'Clear next action, availability, terms, contact options, shipping, intake, and reassurance.', surfaceRole:'The website, local profile, app, phone, form, product page, or checkout converts confidence into action.', description:'The person commits when the available evidence clears a stopping threshold.', exampleBreezy:'Purchase, add to cart, subscribe, or return to a product page.', exampleKp:'Call, submit an intake form, request a consultation, or visit an office.' },
+  { id:'share', label:'Learn / Share', function:'Feedback loop', mentalTask:'Evaluate the outcome and update future behavior.', question:'Did the decision work, and what should I do or communicate next?', evidence:'Post-purchase experience, case updates, reviews, recommendations, returns, support, and repeat use.', surfaceRole:'Owned support, email, branded search, reviews, communities, and social content influence future journeys.', description:'The result becomes new evidence for the person and for other searchers.', exampleBreezy:'Repeat purchase, return, review, branded search, or social recommendation.', exampleKp:'Case-status research, referral, review, follow-up question, or ongoing legal education.' }
+];
+
+export const COGNITIVE_STATES = [
+  { id:'gap', number:'01', title:'Detect the knowledge gap', short:'Something is unresolved', description:'Search begins when current knowledge is insufficient for a decision. The need may be difficult to express precisely.', observed:'The first query is often provisional, incomplete, or written in everyday language.', seo:'Build around the problem language people use before they know the category, product, service, or legal terminology.', basis:'Belkin, Oddy & Brooks, Anomalous State of Knowledge' },
+  { id:'model', number:'02', title:'Construct a working model', short:'Form an initial explanation', description:'The searcher uses prior knowledge and early information to create a tentative model of the problem and possible solutions.', observed:'Broad queries, definitions, AI conversations, category pages, and introductory videos help establish orientation.', seo:'Provide clear definitions, category relationships, constraints, and next questions, not only product or service claims.', basis:'Kuhlthau, Information Search Process' },
+  { id:'scent', number:'03', title:'Follow information scent', short:'Choose the most promising cue', description:'People use visible cues to predict which result or surface is most likely to produce useful information.', observed:'Titles, snippets, thumbnails, reviews, source reputation, category labels, and familiar creators influence the next click.', seo:'Strengthen the cue before the click and ensure the landing experience fulfills the implied promise.', basis:'Pirolli, Information Foraging Theory' },
+  { id:'reformulate', number:'04', title:'Reformulate the question', short:'Make the need more precise', description:'New information changes the searcher’s language, criteria, and next query. Reformulation is a normal part of progress.', observed:'The query becomes narrower, adds constraints, switches platform, or turns into a conversational follow-up.', seo:'Map query sequences and create connective assets that help the person move from broad need to decision criteria.', basis:'Jansen, Booth & Spink, Query Reformulation' },
+  { id:'credibility', number:'05', title:'Test credibility', short:'Separate plausible from dependable', description:'The searcher evaluates source reputation, consistency, specificity, first-hand evidence, and independent corroboration.', observed:'Users check reviews, Reddit, YouTube, credentials, citations, local profiles, and branded validation queries.', seo:'Design a proof system across owned and offsite surfaces, then remove contradictions that weaken trust.', basis:'Unkel & Haas, Credibility Cues' },
+  { id:'threshold', number:'06', title:'Reach a stopping threshold', short:'Enough evidence to act', description:'People rarely inspect every possible option. They often stop when an option becomes sufficiently useful and credible relative to the cost of continuing.', observed:'Urgency, risk, familiarity, effort, and available proof change how much searching is enough.', seo:'Reduce the cost of deciding while supplying more proof for high-risk or unfamiliar choices.', basis:'Caplin, Dean & Martin, Search and Satisficing' },
+  { id:'loop', number:'07', title:'Act, monitor, or loop', short:'The decision creates new information', description:'The person acts, returns for clarification, monitors results, shares experience, or begins another search cycle.', observed:'Purchases, calls, reviews, support searches, case updates, returns, and recommendations become new signals.', seo:'Measure beyond the first session and account for repeat searches, branded demand, reputation, and post-action behavior.', basis:'Kuhlthau and contemporary GenAI information-seeking research' }
+];
+
+export const COGNITIVE_SCENARIOS = [
+  { id:'breezy-fit', client:'breezy', label:'Breezy · Fit uncertainty before purchase', title:'Fit uncertainty before a purchase', description:'A golfer sees a Breezy polo in a creator video, likes the style, but is unsure how the cut fits compared with a brand they already own.', threshold:'Specific sizing guidance plus credible visual or peer proof', defaultRisk:2, defaultUrgency:3, defaultFamiliarity:2, next:'youtube', path:['social','google','youtube','reddit','site'], interpretation:'The trigger is visual, but the unresolved need is demonstrable fit. A review or try-on video provides higher information value than another inspirational post.' },
+  { id:'breezy-premium', client:'breezy', label:'Breezy · Premium-price validation', title:'Premium-price validation', description:'A shopper likes the product but needs to justify a premium price against established golf-apparel alternatives.', threshold:'Clear product differentiation plus independent quality evidence', defaultRisk:3, defaultUrgency:2, defaultFamiliarity:3, next:'reddit', path:['google','shopping','reddit','youtube','site'], interpretation:'The person has moved beyond awareness. The decision now depends on comparative value, material proof, and credible customer experience.' },
+  { id:'kp-claim', client:'kp', label:'KP · Underpaid property claim', title:'Underpaid property claim', description:'A homeowner believes an insurer’s offer is inadequate but does not know whether the issue requires a lawyer, public adjuster, or more documentation.', threshold:'Clear issue framing, credible expertise, and a low-friction next step', defaultRisk:5, defaultUrgency:4, defaultFamiliarity:1, next:'ai', path:['ai','google','reddit','maps','reviews','site'], interpretation:'High risk and low category familiarity increase the need for orientation, corroboration, local legitimacy, and process clarity before contact.' },
+  { id:'kp-urgent', client:'kp', label:'KP · Urgent accident search', title:'Urgent accident search', description:'A family member needs help quickly after an accident and is choosing among nearby firms while information is incomplete.', threshold:'Local legitimacy, relevant practice focus, recent proof, and immediate contact', defaultRisk:5, defaultUrgency:5, defaultFamiliarity:1, next:'maps', path:['google','maps','reviews','site'], interpretation:'Urgency shortens the path, but high stakes raise the credibility threshold. Maps, recent reviews, practice relevance, and action clarity become decisive.' }
+];
+
+export const KNOWLEDGE_CHECKS = [
+  { id:'k-gap', stage:'cognition', question:'What usually exists before a precise query?', options:['A fully formed keyword strategy','An unresolved information need that may be hard to express','A preferred platform','A confirmed purchase choice'], correct:1, explanation:'Information needs are often incomplete or difficult to specify. The first query is a working attempt, not a finished brief.' },
+  { id:'k-scent', stage:'cognition', question:'What is information scent?', options:['The number of keywords on a page','A cue that suggests a result or path may lead toward valuable information','A brand’s visual style','A platform’s traffic estimate'], correct:1, explanation:'Information scent is the perceived promise carried by cues such as titles, snippets, thumbnails, labels, source names, and reviews.' },
+  { id:'k-risk', stage:'cognition', question:'As decision risk rises, what usually happens to the evidence threshold?', options:['It falls because users want speed','It stays fixed','It often rises, increasing the need for corroboration and proof','It becomes unrelated to search behavior'], correct:2, explanation:'High-risk decisions generally require stronger proof and more corroboration, even when urgency compresses the journey.' },
+  { id:'k-reformulate', stage:'journey', question:'Which sequence best demonstrates query reformulation?', options:['golf hat → golf hat → golf hat','golf hat → deep-fit moisture-wicking golf hat → Breezy hat sizing reviews','Breezy Golf → Breezy Golf → Breezy Golf','Google → Google → Google'], correct:1, explanation:'Reformulation adds criteria learned during the search and often shifts toward comparison or validation.' },
+  { id:'k-platform', stage:'ecosystem', question:'When does a platform belong in a Search Everywhere strategy?', options:['Whenever it is popular','Whenever the client already posts there','When it materially influences an audience decision moment','When a competitor has an account'], correct:2, explanation:'Platform priority follows audience behavior, decision role, evidence gap, and business value, not platform popularity alone.' },
+  { id:'k-machine', stage:'dualvision', question:'What can a search or recommendation system directly interpret?', options:['A person’s private confidence','Observable and structured signals such as entities, reviews, links, behavior, and availability','The client’s internal intent','A strategist’s intuition'], correct:1, explanation:'Systems infer relevance and trust from observable evidence. They do not directly read the user’s private mental state.' },
+  { id:'k-scope', stage:'challenge', question:'What is Lamark’s role when execution belongs to organic social or PR?', options:['Take over daily publishing','Ignore the surface','Diagnose the search role, specify the evidence need, advise, and coordinate the handoff','Measure only Google'], correct:2, explanation:'Search Everywhere expands consulting intelligence and coordination without automatically absorbing every execution channel.' }
+];
+
+export const WHEEL_CHALLENGES = [
+  { category:'psychology', label:'Search psychology', prompt:'Explain why the first query is often incomplete.', guide:'Connect an unresolved information need to provisional language and later reformulation.' },
+  { category:'psychology', label:'Search psychology', prompt:'Explain information scent using a real SERP, social, video, or local example.', guide:'Name the visible cue and the expectation it creates before the click.' },
+  { category:'psychology', label:'Search psychology', prompt:'Why can more information temporarily increase uncertainty?', guide:'Use conflicting information, unfamiliar terminology, or expanding options.' },
+  { category:'journey', label:'Journey logic', prompt:'Give an example of one person moving TikTok → Google → Reddit, with each surface doing a different job.', guide:'Assign discovery, orientation or comparison, and validation roles.' },
+  { category:'journey', label:'Journey logic', prompt:'Describe a decision journey that loops backward rather than moving through a clean funnel.', guide:'Show what new evidence or contradiction causes the loop.' },
+  { category:'journey', label:'Journey logic', prompt:'What evidence moves a person from Compare to Validate?', guide:'Distinguish product or service differences from independent proof.' },
+  { category:'platform', label:'Platform strategy', prompt:'Name one platform that is high priority for K&P but lower priority for Breezy, and defend the difference.', guide:'Ground the answer in audience need and decision risk.' },
+  { category:'platform', label:'Platform strategy', prompt:'Name one platform that is high priority for Breezy but lower priority for K&P, and defend the difference.', guide:'Ground the answer in visual discovery, demonstration, or commerce.' },
+  { category:'platform', label:'Platform strategy', prompt:'Why does a popular platform still sometimes deserve low priority?', guide:'Address audience fit, decision role, feasibility, or measurement value.' },
+  { category:'evidence', label:'Evidence systems', prompt:'Connect one human trust need to two machine-readable signals and one business outcome.', guide:'Use reviews, citations, structured facts, local data, or first-hand experience.' },
+  { category:'evidence', label:'Evidence systems', prompt:'Why may “publish more content” be the wrong response to a visibility gap?', guide:'Consider proof, distribution, entity clarity, local data, UX, or conversion.' },
+  { category:'evidence', label:'Evidence systems', prompt:'Give an example of cross-platform inconsistency that could weaken both users and machines.', guide:'Use hours, product attributes, attorney facts, pricing, policies, or positioning.' },
+  { category:'scope', label:'Client scope', prompt:'Answer: “Why are we talking about Reddit if Lamark does not manage organic social?”', guide:'Separate intelligence and strategic consulting from daily community execution.' },
+  { category:'scope', label:'Client scope', prompt:'Name one recommendation SEO should influence but another team should execute.', guide:'State the audience moment, handoff, and measurement.' },
+  { category:'scope', label:'Client scope', prompt:'How do you measure a search surface with little or no keyword-volume data?', guide:'Use native signals, manual evidence, referrals, branded demand, qualitative themes, or assisted outcomes.' },
+  { category:'measurement', label:'Measurement', prompt:'Explain measured evidence, directional evidence, and a hypothesis in client-ready language.', guide:'Make the confidence distinction explicit.' },
+  { category:'measurement', label:'Measurement', prompt:'A brand ranks well but converts poorly. Give two Search Everywhere explanations.', guide:'Consider weak proof, message conflict, poor product or service fit, offsite reputation, or action friction.' },
+  { category:'measurement', label:'Measurement', prompt:'Why can the evidence journey be longer than a single analytics session?', guide:'Use device switching, platform switching, delayed decisions, and offline action.' },
+  { category:'roadmap', label:'Roadmap move', prompt:'Propose one defensible 30-day Breezy Search Everywhere initiative.', guide:'Name the moment, gap, action, owner, and KPI.' },
+  { category:'roadmap', label:'Roadmap move', prompt:'Propose one defensible 30-day K&P Search Everywhere initiative.', guide:'Name the moment, gap, action, owner, and KPI.' },
+  { category:'shock', label:'Search shock', prompt:'An AI answer cites three competitors and omits the client. Diagnose three possible evidence gaps.', guide:'Consider entity clarity, crawlable facts, corroborating mentions, citations, freshness, or authority.' },
+  { category:'shock', label:'Search shock', prompt:'A negative community discussion begins ranking for a branded query. What happens in the first 48 hours?', guide:'Separate listening, fact verification, owned clarification, response governance, and measurement.' },
+  { category:'client', label:'Client response', prompt:'Answer: “Why not put all of our resources into Google?”', guide:'Connect Google to the wider proof, local, video, community, AI, and conversion system.' },
+  { category:'client', label:'Client response', prompt:'Answer: “Is AI visibility a separate strategy from SEO?”', guide:'Explain shared foundations, different interfaces, and additional measurement needs.' }
 ];
 
 export const PLATFORMS = [
@@ -234,7 +150,7 @@ export const PLATFORMS = [
       "Website actions",
       "Local leads"
     ],
-    "color": "#159170"
+    "color": "#2875d6"
   },
   {
     "id": "reddit",
@@ -349,7 +265,7 @@ export const PLATFORMS = [
       "Revenue",
       "Conversion"
     ],
-    "color": "#0f7c8c"
+    "color": "#1688c7"
   },
   {
     "id": "site",
@@ -444,8 +360,8 @@ export const CLIENTS = {
     "key": "breezy",
     "name": "Breezy Golf",
     "label": "ECOMMERCE + LIFESTYLE",
-    "accent": "#14775c",
-    "summary": "A visual-commerce search system where creator discovery, product comparison, fit confidence, community proof, and product-page clarity combine to drive purchase.",
+    "accent": "#0b9fe8",
+    "summary": "A visual-commerce decision system where creator discovery, product comparison, fit confidence, community proof, and product-page clarity combine to drive purchase.",
     "audiences": [
       "Style-led golfers",
       "Bob Does Sports fans",
@@ -489,8 +405,8 @@ export const CLIENTS = {
     "key": "kp",
     "name": "Kanner & Pintaluga",
     "label": "LEGAL + LOCAL TRUST",
-    "accent": "#9a6818",
-    "summary": "A high-stakes search system where urgency, legal clarity, local relevance, attorney credibility, reviews, and consistent firm facts determine whether a person makes contact.",
+    "accent": "#6267ef",
+    "summary": "A high-stakes local decision system where urgency, legal clarity, local relevance, attorney credibility, reviews, and consistent firm facts determine whether a person makes contact.",
     "audiences": [
       "Property owners with disputed claims",
       "Accident victims",
@@ -2332,6 +2248,55 @@ export const SEED_AUDIT_ROWS = [
 ];
 
 export const SOURCES = [
+  {
+    "id": "BELKIN_ASK",
+    "title": "ASK for Information Retrieval: Background and Theory",
+    "type": "Information-seeking research",
+    "use": "Supports the principle that information needs are often not precisely specifiable at the start of a search.",
+    "url": "https://www.researchwithrutgers.org/en/publications/ask-for-information-retrieval-part-i-background-and-theory/"
+  },
+  {
+    "id": "KUHLTHAU_ISP",
+    "title": "Information Search Process",
+    "type": "Information-seeking research",
+    "use": "Supports the relationship among uncertainty, thoughts, feelings, actions, focus formation, and confidence during information seeking.",
+    "url": "https://wp.comminfo.rutgers.edu/ckuhlthau/information-search-process/"
+  },
+  {
+    "id": "PIROLLI_FORAGING",
+    "title": "Rational Analyses of Information Foraging on the Web",
+    "type": "Cognitive science research",
+    "use": "Supports information scent and the cost-benefit assessment behind continuing on a path or switching elsewhere.",
+    "url": "https://onlinelibrary.wiley.com/doi/10.1207/s15516709cog0000_20"
+  },
+  {
+    "id": "JANSEN_REFORMULATION",
+    "title": "Patterns of Query Reformulation During Web Searching",
+    "type": "Information retrieval research",
+    "use": "Supports query reformulation as a normal and frequent search behavior.",
+    "url": "https://onlinelibrary.wiley.com/doi/10.1002/asi.21071"
+  },
+  {
+    "id": "UNKEL_CREDIBILITY",
+    "title": "The Effects of Credibility Cues on the Selection of Search Engine Results",
+    "type": "Information science research",
+    "use": "Supports the role of ranking and source reputation in result selection.",
+    "url": "https://asistdl.onlinelibrary.wiley.com/doi/10.1002/asi.23820"
+  },
+  {
+    "id": "CAPLIN_SATISFICING",
+    "title": "Search and Satisficing",
+    "type": "Decision science research",
+    "use": "Supports sequential search and stopping once an acceptable threshold is reached.",
+    "url": "https://pubs.aeaweb.org/doi/10.1257/aer.101.7.2899"
+  },
+  {
+    "id": "CHARETTE_GENAI",
+    "title": "From Queries to Conversations: Human–GenAI Information Seeking",
+    "type": "Contemporary information-seeking research",
+    "use": "Supports evolving information needs, doubt, and iterative search in conversational AI interactions.",
+    "url": "https://asistdl.onlinelibrary.wiley.com/doi/10.1002/pra2.1240"
+  },
   {
     "id": "GSC_GEN_AI",
     "title": "Google Search Generative AI performance reports",

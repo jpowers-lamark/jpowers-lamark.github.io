@@ -3,7 +3,7 @@
   <desc id="desc">A visual operating model connecting audience needs, search surfaces, machine-readable signals, and business outcomes across the decision journey.</desc>
   <defs>
     <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1d4ed8"/><stop offset="1" stop-color="#2f7bf6"/></linearGradient>
-    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0c6e55"/><stop offset="1" stop-color="#22a87e"/></linearGradient>
+    <linearGradient id="indigo" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4f46e5"/><stop offset="1" stop-color="#2f7bf6"/></linearGradient>
     <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8b5a12"/><stop offset="1" stop-color="#d49a32"/></linearGradient>
     <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#13213a" flood-opacity=".12"/></filter>
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#dce4f0" stroke-width="1" opacity=".48"/></pattern>
@@ -24,12 +24,12 @@
     <g transform="translate(0 28)">
       <path d="M88 62 H1330" stroke="#b8c5d8" stroke-width="3" marker-end="url(#arrow)"/>
       <g transform="translate(0 0)"><circle cx="56" cy="62" r="37" fill="url(#blue)"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">01</text><text x="0" y="125" class="journeyTitle">TRIGGER</text><text x="0" y="146" class="journeyCopy">A need appears.</text></g>
-      <g transform="translate(205 0)"><circle cx="56" cy="62" r="37" fill="#eef3ff" stroke="#7da7ff" stroke-width="2"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#2864dc">02</text><text x="0" y="125" class="journeyTitle">DEFINE</text><text x="0" y="146" class="journeyCopy">Frame the problem.</text></g>
-      <g transform="translate(410 0)"><circle cx="56" cy="62" r="37" fill="#eef3ff" stroke="#7da7ff" stroke-width="2"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#2864dc">03</text><text x="0" y="125" class="journeyTitle">OPTIONS</text><text x="0" y="146" class="journeyCopy">Generate choices.</text></g>
-      <g transform="translate(615 0)"><circle cx="56" cy="62" r="37" fill="#eefaf6" stroke="#6bc7a6" stroke-width="2"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#14775c">04</text><text x="0" y="125" class="journeyTitle">COMPARE</text><text x="0" y="146" class="journeyCopy">Evaluate differences.</text></g>
+      <g transform="translate(205 0)"><circle cx="56" cy="62" r="37" fill="#eef3ff" stroke="#7da7ff" stroke-width="2"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#2864dc">02</text><text x="0" y="125" class="journeyTitle">ASK</text><text x="0" y="146" class="journeyCopy">Express the need.</text></g>
+      <g transform="translate(410 0)"><circle cx="56" cy="62" r="37" fill="#eef3ff" stroke="#7da7ff" stroke-width="2"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#2864dc">03</text><text x="0" y="125" class="journeyTitle">SCAN</text><text x="0" y="146" class="journeyCopy">Generate a viable set.</text></g>
+      <g transform="translate(615 0)"><circle cx="56" cy="62" r="37" fill="#f1efff" stroke="#9a8cff" stroke-width="2"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#5b4ee8">04</text><text x="0" y="125" class="journeyTitle">COMPARE</text><text x="0" y="146" class="journeyCopy">Evaluate differences.</text></g>
       <g transform="translate(820 0)"><circle cx="56" cy="62" r="37" fill="#fff8ea" stroke="#d6ac58" stroke-width="2"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#9a6818">05</text><text x="0" y="125" class="journeyTitle">VALIDATE</text><text x="0" y="146" class="journeyCopy">Seek independent proof.</text></g>
-      <g transform="translate(1025 0)"><circle cx="56" cy="62" r="37" fill="url(#green)"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">06</text><text x="0" y="125" class="journeyTitle">ACT</text><text x="0" y="146" class="journeyCopy">Buy, call, visit, sign.</text></g>
-      <g transform="translate(1230 0)"><circle cx="56" cy="62" r="37" fill="url(#gold)"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">07</text><text x="0" y="125" class="journeyTitle">RETURN</text><text x="0" y="146" class="journeyCopy">Repeat and advocate.</text></g>
+      <g transform="translate(1025 0)"><circle cx="56" cy="62" r="37" fill="url(#indigo)"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">06</text><text x="0" y="125" class="journeyTitle">ACT</text><text x="0" y="146" class="journeyCopy">Buy, call, visit, sign.</text></g>
+      <g transform="translate(1230 0)"><circle cx="56" cy="62" r="37" fill="url(#gold)"/><text x="56" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">07</text><text x="0" y="125" class="journeyTitle">LEARN / SHARE</text><text x="0" y="146" class="journeyCopy">Update and influence.</text></g>
     </g>
   </g>
 
@@ -54,16 +54,16 @@
     <path d="M460 159 H522" stroke="#718096" stroke-width="3" marker-end="url(#arrow)"/>
 
     <g transform="translate(530 30)">
-      <rect width="440" height="258" rx="24" fill="#f2fbf7" stroke="#a9dbc7" filter="url(#shadow)"/>
-      <text x="28" y="40" class="eyebrow" font-size="14" fill="#14775c">2 · INTERPRETABLE SIGNALS</text>
+      <rect width="440" height="258" rx="24" fill="#f5f3ff" stroke="#c6bef8" filter="url(#shadow)"/>
+      <text x="28" y="40" class="eyebrow" font-size="14" fill="#5b4ee8">2 · INTERPRETABLE SIGNALS</text>
       <text x="28" y="78" class="nodeTitle">What people and systems can read</text>
       <g transform="translate(28 100)" class="small">
-        <rect width="116" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="58" y="24" text-anchor="middle">Relevance</text>
-        <rect x="126" width="110" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="181" y="24" text-anchor="middle">Entities</text>
-        <rect x="246" width="166" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="329" y="24" text-anchor="middle">Reviews + proof</text>
-        <rect y="50" width="124" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="62" y="74" text-anchor="middle">Citations</text>
-        <rect x="134" y="50" width="144" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="206" y="74" text-anchor="middle">Local facts</text>
-        <rect x="288" y="50" width="124" height="38" rx="19" fill="#fff" stroke="#c5ddd4"/><text x="350" y="74" text-anchor="middle">Experience</text>
+        <rect width="116" height="38" rx="19" fill="#fff" stroke="#d7d2fb"/><text x="58" y="24" text-anchor="middle">Relevance</text>
+        <rect x="126" width="110" height="38" rx="19" fill="#fff" stroke="#d7d2fb"/><text x="181" y="24" text-anchor="middle">Entities</text>
+        <rect x="246" width="166" height="38" rx="19" fill="#fff" stroke="#d7d2fb"/><text x="329" y="24" text-anchor="middle">Reviews + proof</text>
+        <rect y="50" width="124" height="38" rx="19" fill="#fff" stroke="#d7d2fb"/><text x="62" y="74" text-anchor="middle">Citations</text>
+        <rect x="134" y="50" width="144" height="38" rx="19" fill="#fff" stroke="#d7d2fb"/><text x="206" y="74" text-anchor="middle">Local facts</text>
+        <rect x="288" y="50" width="124" height="38" rx="19" fill="#fff" stroke="#d7d2fb"/><text x="350" y="74" text-anchor="middle">Experience</text>
       </g>
       <text x="28" y="224" class="nodeCopy">Strong signals reduce ambiguity, strengthen trust, and travel across platforms.</text>
     </g>
