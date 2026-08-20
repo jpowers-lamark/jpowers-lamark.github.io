@@ -2,92 +2,125 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f7f8fb">
+  <meta name="description" content="Lamark Search Everywhere Experience Lab, a live collaborative workshop for understanding cognitive search behavior, cross-surface evidence, and strategic decision systems.">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <title>Search Everywhere Learning Lab | Lamark</title>
-  <meta name="description" content="A live, collaborative Search Everywhere learning workshop for the Lamark SEO team.">
-  <link rel="stylesheet" href="assets/styles.css?v=2.0.0">
+  <meta property="og:title" content="Lamark Search Everywhere Experience Lab">
+  <meta property="og:description" content="A live, multi-user Search Everywhere workshop and audit environment.">
+  <meta property="og:image" content="https://jpowers-lamark.github.io/assets/og-search-everywhere.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f7f8fb">
+  <meta property="og:type" content="website">
+  <title>Lamark Search Everywhere Experience Lab</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/styles.css?v=3.0.0">
 </head>
 <body>
-  <header class="app-header">
-    <div class="brand-lockup">
-      <button class="icon-button hidden" id="mobileMenuButton" type="button" aria-label="Open workshop navigation">☰</button>
-      <div class="brand-mark" aria-hidden="true">L</div>
-      <div class="brand-copy">
-        <strong>Search Everywhere Lab</strong>
-        <span>Lamark SEO Learning Workshop</span>
+  <a class="skip-link" href="#workshop-main">Skip to workshop</a>
+  <div id="app" class="app-shell" data-connection="initializing">
+    <header class="topbar" aria-label="Workshop controls">
+      <button id="mobile-menu" class="icon-button mobile-only" type="button" aria-label="Open stage navigation">☰</button>
+      <a class="brand-lockup" href="#" aria-label="Search Everywhere Experience Lab home">
+        <span class="brand-mark" aria-hidden="true">L</span>
+        <span><small>LAMARK</small><strong>Search Everywhere Experience Lab</strong></span>
+      </a>
+      <div class="room-status" aria-live="polite">
+        <button id="room-code-button" class="room-pill hidden" type="button" title="Copy workshop link"><i></i><span id="room-code-label">ROOM</span></button>
+        <span id="connection-label" class="connection-label">Initializing</span>
+        <label class="follow-toggle hidden"><input id="follow-facilitator" type="checkbox" checked><span>Follow facilitator</span></label>
       </div>
-    </div>
-
-    <div class="header-center">
-      <div class="connection-pill" id="connectionPill" data-state="idle" title="Connection status">
-        <span class="connection-dot" aria-hidden="true"></span>
-        <span id="connectionText">Not connected</span>
+      <div class="participant-cluster">
+        <div id="participant-avatars" class="avatar-stack" aria-label="Participants"></div>
+        <button id="open-participants" class="icon-button" type="button" aria-label="View participants">◎</button>
+        <button id="open-facilitator" class="icon-button hidden" type="button" aria-label="Open facilitator controls">⚙</button>
       </div>
-      <div class="room-pill hidden" id="roomPill">
-        <span>Room</span>
-        <code id="roomCodeHeader">------</code>
+    </header>
+
+    <aside id="stage-rail" class="stage-rail" aria-label="Workshop stages"></aside>
+    <main id="workshop-main" class="workshop-main" tabindex="-1">
+      <section id="scene-root" class="scene-root" aria-live="polite"></section>
+    </main>
+
+    <footer class="session-footer">
+      <div class="footer-progress"><span id="stage-kicker">WORKSHOP</span><strong id="stage-title">Welcome</strong></div>
+      <div class="footer-actions">
+        <div id="stage-timer" class="stage-timer hidden" aria-live="polite">00:00</div>
+        <button id="reaction-button" class="secondary-button hidden" type="button">React</button>
+        <button id="previous-stage" class="secondary-button hidden" type="button">Previous</button>
+        <button id="next-stage" class="primary-button hidden" type="button">Next</button>
       </div>
-      <div class="timer-pill hidden" id="timerPill">
-        <span>Activity</span>
-        <strong id="timerDisplay">00:00</strong>
-      </div>
-    </div>
+    </footer>
 
-    <div class="header-actions">
-      <div class="avatar-stack" id="avatarStack" aria-label="Participants"></div>
-      <button class="icon-button" id="copyRoomButton" type="button" title="Copy room code" aria-label="Copy room code">⧉</button>
-      <button class="icon-button" id="fullscreenButton" type="button" title="Full screen" aria-label="Enter full screen">⛶</button>
-    </div>
-  </header>
-
-  <aside class="stage-rail" id="stageRail" aria-label="Workshop stages">
-    <div class="rail-progress">
-      <div class="rail-progress-top"><span>Learning journey</span><span id="progressLabel">0%</span></div>
-      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-    </div>
-    <nav class="stage-nav" id="stageNav"></nav>
-    <div class="rail-follow hidden" id="followPanel">
-      <div class="toggle-row">
-        <span>Follow facilitator</span>
-        <label class="switch">
-          <input id="followFacilitator" type="checkbox" checked>
-          <span class="switch-slider"></span>
-        </label>
-      </div>
-      <p class="rail-note">Turn this off to review another lesson without changing the shared room.</p>
-    </div>
-  </aside>
-
-  <main class="app-main" id="stageRoot" aria-live="polite"></main>
-
-  <div class="facilitator-dock" id="facilitatorDock">
-    <div class="dock-stage">
-      <strong id="dockStageTitle">The Search Fracture</strong>
-      <span id="dockStageMeta">Stage 1 of 11</span>
-    </div>
-    <div class="reactions" aria-label="Live reactions">
-      <button class="reaction-button" data-reaction="💡" type="button" title="Good insight">💡</button>
-      <button class="reaction-button" data-reaction="👏" type="button" title="Applause">👏</button>
-      <button class="reaction-button" data-reaction="🤔" type="button" title="Thinking">🤔</button>
-      <button class="reaction-button" data-reaction="🔥" type="button" title="Strong idea">🔥</button>
-    </div>
-    <div class="dock-controls">
-      <button class="btn btn-secondary btn-small" id="timerFiveButton" type="button">5 min</button>
-      <button class="btn btn-secondary btn-small" id="timerStopButton" type="button">Stop timer</button>
-      <button class="btn btn-secondary btn-small" id="previousStageButton" type="button">← Back</button>
-      <button class="btn btn-primary btn-small" id="nextStageButton" type="button">Next →</button>
-    </div>
+    <div id="remote-cursors" class="remote-cursors" aria-hidden="true"></div>
+    <div id="reaction-layer" class="reaction-layer" aria-hidden="true"></div>
+    <div id="toast-region" class="toast-region" role="status" aria-live="polite"></div>
+    <canvas id="celebration-canvas" class="celebration-canvas" aria-hidden="true"></canvas>
   </div>
 
-  <div class="cursor-layer" id="cursorLayer" aria-hidden="true"></div>
-  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+  <dialog id="join-dialog" class="modal modal-wide" aria-labelledby="join-title">
+    <form id="join-form" class="modal-content">
+      <div class="modal-heading">
+        <p class="eyebrow">LIVE COLLABORATIVE WORKSHOP</p>
+        <h2 id="join-title">Enter the Search Everywhere Experience Lab</h2>
+        <p>Join an existing workshop or create a new room. Everyone sees votes, cards, facilitator movement, and cursors in real time.</p>
+      </div>
+      <div class="join-grid">
+        <label><span>Your name</span><input id="display-name" autocomplete="name" maxlength="36" required placeholder="Justin"></label>
+        <label><span>Workshop code</span><input id="room-code-input" autocomplete="off" maxlength="8" placeholder="Leave blank to create"></label>
+        <label><span>Starting squad</span><select id="team-select"><option value="auto">Assign me automatically</option><option value="breezy">Breezy Golf squad</option><option value="kp">KP Attorney squad</option><option value="facilitator">Facilitator</option></select></label>
+        <fieldset class="color-fieldset"><legend>Cursor color</legend><div id="color-options" class="color-options"></div></fieldset>
+      </div>
+      <div id="join-mode-note" class="system-note"></div>
+      <div class="modal-actions"><button id="join-cancel" class="secondary-button" type="button">Preview without joining</button><button id="join-submit" class="primary-button" type="submit">Enter workshop</button></div>
+    </form>
+  </dialog>
 
-  <script src="assets/config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/content.js?v=2.0.0"></script>
-  <script src="assets/realtime.js?v=2.0.0"></script>
-  <script src="assets/app.js?v=2.0.0"></script>
+  <dialog id="participants-dialog" class="modal side-modal" aria-labelledby="participants-title">
+    <div class="modal-content"><div class="modal-heading compact"><p class="eyebrow">ROOM</p><h2 id="participants-title">Participants</h2></div><div id="participants-list" class="participants-list"></div><div class="modal-actions sticky-actions"><button id="close-participants" class="secondary-button" type="button">Close</button></div></div>
+  </dialog>
+
+  <dialog id="facilitator-dialog" class="modal side-modal" aria-labelledby="facilitator-title">
+    <div class="modal-content facilitator-panel"><div class="modal-heading compact"><p class="eyebrow">FACILITATOR CONSOLE</p><h2 id="facilitator-title">Control the room</h2></div><div id="facilitator-controls"></div><div class="modal-actions sticky-actions"><button id="close-facilitator" class="secondary-button" type="button">Close</button></div></div>
+  </dialog>
+
+  <dialog id="card-editor-dialog" class="modal" aria-labelledby="card-editor-title">
+    <form id="card-editor-form" class="modal-content">
+      <div class="modal-heading compact"><p class="eyebrow">SHARED WORKSPACE</p><h2 id="card-editor-title">Add evidence</h2></div>
+      <input id="card-editor-id" type="hidden">
+      <label><span>Headline</span><input id="card-editor-headline" maxlength="90" required></label>
+      <label><span>Detail</span><textarea id="card-editor-detail" rows="5" maxlength="650" required></textarea></label>
+      <div class="form-grid"><label><span>Journey stage</span><select id="card-editor-stage"></select></label><label><span>Platform</span><select id="card-editor-platform"></select></label><label><span>Client</span><select id="card-editor-client"><option value="breezy">Breezy Golf</option><option value="kp">KP Attorney</option><option value="both">Both / framework</option></select></label><label><span>Evidence type</span><select id="card-editor-evidence"><option value="confirmed">Confirmed evidence</option><option value="directional">Directional signal</option><option value="hypothesis">Hypothesis to validate</option></select></label></div>
+      <label><span>Source URL or note</span><input id="card-editor-source" placeholder="https://..."></label>
+      <div class="modal-actions"><button id="card-editor-delete" class="danger-button hidden" type="button">Delete</button><span class="modal-spacer"></span><button id="card-editor-cancel" class="secondary-button" type="button">Cancel</button><button class="primary-button" type="submit">Save card</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="finding-dialog" class="modal modal-wide" aria-labelledby="finding-title">
+    <form id="finding-form" class="modal-content">
+      <div class="modal-heading compact"><p class="eyebrow">LIVE AUDIT</p><h2 id="finding-title">Add audit finding</h2></div><input id="finding-id" type="hidden">
+      <div class="form-grid three-column"><label><span>Client</span><select id="finding-client"><option value="breezy">Breezy Golf</option><option value="kp">KP Attorney</option></select></label><label><span>Platform</span><select id="finding-platform"></select></label><label><span>Journey stage</span><select id="finding-stage"></select></label><label><span>Audience segment</span><input id="finding-audience" maxlength="80" required></label><label><span>Exact query or prompt</span><input id="finding-query" maxlength="180" required></label><label><span>Visibility</span><select id="finding-visibility"><option value="present">Present</option><option value="partial">Partial</option><option value="absent">Absent</option><option value="unknown">Needs validation</option></select></label></div>
+      <label><span>Observation</span><textarea id="finding-observation" rows="4" maxlength="900" required></textarea></label><label><span>Gap or risk</span><textarea id="finding-gap" rows="3" maxlength="600" required></textarea></label><label><span>Recommendation</span><textarea id="finding-recommendation" rows="3" maxlength="700" required></textarea></label>
+      <div class="form-grid three-column"><label><span>Business outcome</span><select id="finding-outcome"><option value="visibility">Visibility</option><option value="trust">Trust</option><option value="lead-quality">Lead quality</option><option value="revenue">Revenue</option><option value="retention">Retention</option><option value="efficiency">Efficiency</option></select></label><label><span>Priority</span><select id="finding-priority"><option value="critical">Critical</option><option value="high">High</option><option value="medium" selected>Medium</option><option value="low">Low</option></select></label><label><span>Confidence</span><select id="finding-confidence"><option value="confirmed">Confirmed</option><option value="directional" selected>Directional</option><option value="hypothesis">Hypothesis</option></select></label><label><span>Execution owner</span><select id="finding-owner"><option>SEO</option><option>Content</option><option>PR / Offsite</option><option>Organic Social</option><option>Paid Media</option><option>Local</option><option>UX / CRO</option><option>Development</option><option>Client</option><option>Cross-functional</option></select></label><label class="span-two"><span>Evidence URL</span><input id="finding-source" placeholder="https://..."></label></div>
+      <div class="modal-actions"><button id="finding-delete" class="danger-button hidden" type="button">Delete</button><span class="modal-spacer"></span><button id="finding-cancel" class="secondary-button" type="button">Cancel</button><button class="primary-button" type="submit">Save finding</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="strategy-dialog" class="modal modal-wide" aria-labelledby="strategy-title">
+    <form id="strategy-form" class="modal-content">
+      <div class="modal-heading compact"><p class="eyebrow">STRATEGY WAR ROOM</p><h2 id="strategy-title">Propose an initiative</h2></div><input id="strategy-id" type="hidden">
+      <div class="form-grid"><label><span>Client</span><select id="strategy-client"><option value="breezy">Breezy Golf</option><option value="kp">KP Attorney</option></select></label><label><span>Pillar</span><select id="strategy-pillar"><option value="capture">Capture demand</option><option value="prove">Prove value and trust</option><option value="connect">Connect signals and systems</option></select></label></div>
+      <label><span>Initiative</span><input id="strategy-name" maxlength="120" required></label><label><span>Why this matters</span><textarea id="strategy-rationale" rows="4" maxlength="800" required></textarea></label>
+      <div class="form-grid three-column"><label><span>Business impact, 1–5</span><input id="strategy-impact" type="number" min="1" max="5" value="4" required></label><label><span>Audience relevance, 1–5</span><input id="strategy-audience" type="number" min="1" max="5" value="4" required></label><label><span>Visibility gap, 1–5</span><input id="strategy-gap" type="number" min="1" max="5" value="4" required></label><label><span>Feasibility, 1–5</span><input id="strategy-feasibility" type="number" min="1" max="5" value="3" required></label><label><span>Measurement confidence, 1–5</span><input id="strategy-measurement" type="number" min="1" max="5" value="3" required></label><label><span>Owner</span><select id="strategy-owner"><option>SEO</option><option>Content</option><option>PR / Offsite</option><option>Organic Social</option><option>Local</option><option>UX / CRO</option><option>Development</option><option>Client</option><option>Cross-functional</option></select></label><label><span>Roadmap horizon</span><select id="strategy-horizon"><option value="now">0–30 days</option><option value="next">31–60 days</option><option value="scale">61–90 days</option></select></label></div>
+      <label><span>First 30-day action</span><textarea id="strategy-action" rows="3" maxlength="500" required></textarea></label>
+      <div class="modal-actions"><button id="strategy-delete" class="danger-button hidden" type="button">Delete</button><span class="modal-spacer"></span><button id="strategy-cancel" class="secondary-button" type="button">Cancel</button><button class="primary-button" type="submit">Save initiative</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="detail-dialog" class="modal modal-wide" aria-labelledby="detail-title"><div class="modal-content"><div class="modal-heading compact"><p class="eyebrow">AUDIT DETAIL</p><h2 id="detail-title">Finding</h2></div><div id="detail-content"></div><div class="modal-actions"><button id="detail-close" class="primary-button" type="button">Close</button></div></div></dialog>
+
+  <script src="./assets/config.js"></script>
+  <script type="module" src="./assets/app.js?v=3.0.0"></script>
 </body>
 </html>

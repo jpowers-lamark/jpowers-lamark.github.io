@@ -1,1 +1,1 @@
-{"name":"Lamark Search Everywhere Lab","short_name":"Search Lab","start_url":"./","display":"standalone","background_color":"#f7f8fb","theme_color":"#f7f8fb","icons":[{"src":"./assets/favicon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
+{"name":"Lamark Search Everywhere Experience Lab","short_name":"Search Lab","start_url":"./index.html","display":"standalone","background_color":"#f7f9fd","theme_color":"#0b2b63","icons":[{"src":"./assets/favicon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}

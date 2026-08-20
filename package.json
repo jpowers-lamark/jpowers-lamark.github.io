@@ -1,9 +1,9 @@
 {
-  "name": "lamark-search-everywhere-lab",
-  "version": "1.0.0",
+  "name": "lamark-search-everywhere-experience-lab",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
-  "description": "A live, collaborative Search Everywhere workshop for Lamark's SEO team.",
+  "description": "A live, collaborative Search Everywhere strategy workshop for Lamark's SEO team.",
   "scripts": {
     "validate": "node scripts/validate.mjs",
     "serve": "python3 -m http.server 4173",
