@@ -1,7 +1,0 @@
-IMPORTANT: assets/config.js is intentionally not included in this update.
-
-Your live GitHub repository already contains the working Supabase project URL and publishable key. Do not delete or replace that file when uploading version 3.0.0.
-
-Before uploading the website files, run supabase/v3-upgrade.sql once through the Supabase browser SQL Editor.
-
-Then upload the update through GitHub, commit to main, wait for the Pages Action, hard refresh /index.html, and run a two-computer room test.
