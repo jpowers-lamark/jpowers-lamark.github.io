@@ -31,6 +31,7 @@ const storageSet = (key, value) => {
 
 const sceneRoot = $('#scene-root');
 const stageRail = $('#stage-rail');
+const workshopMain = $('#workshop-main');
 const appShell = $('#app');
 const joinDialog = $('#join-dialog');
 const participantsDialog = $('#participants-dialog');
@@ -79,13 +80,36 @@ const state = {
   suppressRender: false,
   remoteCursors: new Map(),
   cursorCleanup: null,
-  timerInterval: null
+  timerInterval: null,
+  applyingHostScroll: false,
+  scrollBroadcastFrame: null,
+  pendingHostView: null,
+  pendingHostViewNotice: false
 };
 
 const currentUserId = () => realtime.user?.id || state.profile?.id || 'preview-user';
 const isFacilitator = () => Boolean(
   state.profile?.role === 'facilitator' ||
   (state.room?.facilitator_id && state.room.facilitator_id === currentUserId())
+);
+const PRESENTATION_DEFAULTS = Object.freeze({
+  mode: 'workshop',
+  navigationLocked: true,
+  scrollSync: false,
+  pointersVisible: true,
+  reactionsEnabled: true,
+  focusMode: false,
+  contributionsPaused: false
+});
+const presentationSettings = (room = state.room) => ({
+  ...PRESENTATION_DEFAULTS,
+  ...(room?.settings?.presentation || {})
+});
+const participantNavigationLocked = () => Boolean(
+  state.connected && !isFacilitator() && presentationSettings().navigationLocked
+);
+const participantContributionsPaused = () => Boolean(
+  state.connected && !isFacilitator() && presentationSettings().contributionsPaused
 );
 const liveItems = (type) => state.items.filter((item) => item.item_type === type);
 const payloadOf = (item) => item?.payload || {};
@@ -115,6 +139,7 @@ function openDialog(dialog) {
 }
 function closeDialog(dialog) {
   if (dialog.open) dialog.close();
+  setTimeout(flushPendingHostView, 0);
 }
 
 function setConnectionLabel(status, mode = state.connectionMode) {
@@ -141,6 +166,15 @@ function isProtectedSceneEditor(node = document.activeElement) {
   );
 }
 
+function participantIsBusy() {
+  if (!state.connected || isFacilitator()) return false;
+  const active = document.activeElement;
+  return Boolean(
+    (active instanceof Element && active.matches(EDITABLE_SELECTOR)) ||
+    document.querySelector('dialog[open]')
+  );
+}
+
 function scheduleRender() {
   if (state.suppressRender || isProtectedSceneEditor()) {
     state.pendingRender = true;
@@ -164,6 +198,11 @@ function scheduleRender() {
 function updateSceneEditingLock() {
   const stillEditing = isProtectedSceneEditor();
   state.suppressRender = stillEditing;
+  if (!stillEditing && state.pendingHostView) {
+    state.pendingRender = false;
+    flushPendingHostView();
+    return;
+  }
   if (!stillEditing && state.pendingRender) {
     state.pendingRender = false;
     scheduleRender();
@@ -272,40 +311,75 @@ function populateStaticControls() {
 }
 
 function renderStageRail() {
-  stageRail.innerHTML = `<div class="stage-rail-header"><small>LIVE WORKSHOP</small><strong>${STAGES.length} stages</strong></div>` + STAGES.map((item, index) => `
-    <button class="stage-button${index === state.stageIndex ? ' is-active' : ''}${index < state.stageIndex ? ' is-complete' : ''}" type="button" data-stage-index="${index}" aria-current="${index === state.stageIndex ? 'step' : 'false'}">
+  const locked = participantNavigationLocked();
+  stageRail.innerHTML = `<div class="stage-rail-header"><div><small>LIVE WORKSHOP</small><strong>${STAGES.length} stages</strong></div>${locked ? '<span class="rail-lock">HOST CONTROLLED</span>' : ''}</div>` + STAGES.map((item, index) => `
+    <button class="stage-button${index === state.stageIndex ? ' is-active' : ''}${index < state.stageIndex ? ' is-complete' : ''}${locked ? ' is-locked' : ''}" type="button" data-stage-index="${index}" aria-current="${index === state.stageIndex ? 'step' : 'false'}"${locked ? ' disabled aria-disabled="true"' : ''}>
       <span class="stage-number">${item.number}</span><span class="stage-copy"><small>${esc(item.kicker)}</small><strong>${esc(item.title)}</strong></span>
     </button>`).join('');
 }
 
-async function goToStage(index, broadcast = false) {
+async function goToStage(index, broadcast = false, options = {}) {
+  const { forced = false, preserveScroll = false } = options;
+  if (participantNavigationLocked() && !forced) {
+    toast('Host-guided navigation is active', 'The facilitator controls the current workshop stage.');
+    return false;
+  }
   const next = clamp(index, 0, STAGES.length - 1);
   state.stageIndex = next;
   clearRemoteCursors();
   renderStageRail();
   renderStage();
-  sceneRoot.closest('.workshop-main')?.scrollTo({ top: 0, behavior: 'smooth' });
+  if (!preserveScroll) {
+    workshopMain?.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   stageRail.classList.remove('is-open');
   await realtime.updatePresence?.({ stage: STAGES[next].id });
   if (broadcast && state.connected && isFacilitator()) {
     try { await realtime.updateRoom({ active_stage: next }); }
     catch (error) { toast('Stage could not be broadcast', error.message, 'error'); }
   }
+  return true;
 }
 
 function renderShellState() {
   const active = stage();
+  const settings = presentationSettings();
+  const locked = participantNavigationLocked();
+  const isHost = isFacilitator();
+  appShell.dataset.role = isHost ? 'facilitator' : 'participant';
+  appShell.dataset.focusMode = !isHost && settings.focusMode ? 'true' : 'false';
+  appShell.dataset.contributionsPaused = !isHost && settings.contributionsPaused ? 'true' : 'false';
   $('#stage-kicker').textContent = `${active.kicker} · ${active.number}`;
   $('#stage-title').textContent = active.title;
-  $('#previous-stage').classList.toggle('hidden', state.preview && state.stageIndex === 0);
-  $('#next-stage').classList.remove('hidden');
-  $('#previous-stage').disabled = state.stageIndex === 0;
-  $('#next-stage').disabled = state.stageIndex === STAGES.length - 1;
+  $('#previous-stage').classList.toggle('hidden', locked || (state.preview && state.stageIndex === 0));
+  $('#next-stage').classList.toggle('hidden', locked);
+  $('#previous-stage').disabled = locked || state.stageIndex === 0;
+  $('#next-stage').disabled = locked || state.stageIndex === STAGES.length - 1;
   $('#next-stage').textContent = state.stageIndex === STAGES.length - 1 ? 'Complete' : 'Next';
-  $('#reaction-button').classList.toggle('hidden', !state.connected);
-  $('#open-facilitator').classList.toggle('hidden', !isFacilitator());
-  $('.follow-toggle').classList.toggle('hidden', !state.connected || isFacilitator());
+  $('#reaction-button').classList.toggle('hidden', !state.connected || !settings.reactionsEnabled);
+  $('#open-facilitator').classList.toggle('hidden', !isHost);
+  $('.follow-toggle').classList.toggle('hidden', !state.connected || isHost || settings.navigationLocked);
   $('#follow-facilitator').checked = state.followFacilitator;
+  $('#remote-cursors').classList.toggle('hidden', !settings.pointersVisible);
+  if (!settings.pointersVisible) clearRemoteCursors();
+
+  const status = $('#presentation-status');
+  if (status) {
+    const labels = [];
+    if (isHost) labels.push('HOST');
+    labels.push(settings.navigationLocked ? 'GUIDED' : (state.followFacilitator ? 'FOLLOWING' : 'OPEN REVIEW'));
+    if (settings.scrollSync) labels.push('SCREEN SYNC');
+    if (settings.contributionsPaused) labels.push('SUBMISSIONS PAUSED');
+    status.textContent = labels.join(' · ');
+    status.title = settings.navigationLocked
+      ? 'The facilitator controls stage navigation.'
+      : 'Participants may move independently between stages.';
+    status.classList.toggle('is-host', isHost);
+    status.classList.toggle('is-paused', settings.contributionsPaused);
+    status.classList.toggle('hidden', !state.connected);
+  }
+  renderStageRail();
   renderParticipants();
   updateTimer();
 }
@@ -320,12 +394,66 @@ function renderParticipants() {
 
 function renderFacilitatorControls() {
   const timer = state.room?.timer || {};
+  const settings = presentationSettings();
+  const toggle = (key, title, description, checked, icon) => `
+    <label class="host-setting-row">
+      <span class="host-setting-icon" aria-hidden="true">${icon}</span>
+      <span class="host-setting-copy"><strong>${esc(title)}</strong><small>${esc(description)}</small></span>
+      <input class="host-switch" type="checkbox" data-host-setting="${key}"${checked ? ' checked' : ''}>
+    </label>`;
   $('#facilitator-controls').innerHTML = `
-    <div class="stack">
-      <section class="facilitator-section"><h3>Move the room</h3><label><span>Active stage</span><select id="facilitator-stage">${STAGES.map((item, index) => `<option value="${index}"${index === state.stageIndex ? ' selected' : ''}>${item.number} · ${esc(item.title)}</option>`).join('')}</select></label><p class="small muted">Participants with “Follow facilitator” enabled move with you.</p></section>
-      <section class="facilitator-section"><h3>Activity timer</h3><div class="timer-presets">${[1,5,10,15,20].map((minutes) => `<button class="chip-button" type="button" data-timer-minutes="${minutes}">${minutes}m</button>`).join('')}</div><div class="button-row"><button id="timer-pause" class="secondary-button" type="button">${timer.running ? 'Pause' : 'Resume'}</button><button id="timer-clear" class="secondary-button" type="button">Clear</button></div></section>
-      <section class="facilitator-section"><h3>Room access</h3><p class="mono small">${esc(state.room?.code || 'PREVIEW')}</p><button id="facilitator-copy-link" class="secondary-button" type="button">Copy invite link</button></section>
-      <section class="facilitator-section"><h3>Session state</h3><p class="small muted">${state.presence.length} participant${state.presence.length === 1 ? '' : 's'} · ${state.items.length} live contribution${state.items.length === 1 ? '' : 's'} · ${state.votes.length} vote record${state.votes.length === 1 ? '' : 's'}</p></section>
+    <div class="stack host-console">
+      <section class="facilitator-section host-console-hero">
+        <div><p class="eyebrow">PRESENTATION AUTHORITY</p><h3>Host controls are private to this browser.</h3><p class="small muted">Only the room creator can update the shared stage, scroll state, interaction rules, or visibility settings. Supabase policies reject participant room-setting changes.</p></div>
+        <div class="host-state-readout"><span>${state.presence.length}</span><small>connected</small><span>${state.stageIndex + 1}/${STAGES.length}</span><small>current stage</small></div>
+      </section>
+
+      <section class="facilitator-section">
+        <div class="host-section-heading"><span>01</span><div><h3>Operating mode</h3><p>Apply a tested preset, then adjust individual controls as needed.</p></div></div>
+        <div class="host-preset-grid">
+          <button class="host-preset" type="button" data-host-preset="workshop"><strong>Workshop</strong><small>Host-guided stages, live inputs, cursors, and reactions.</small></button>
+          <button class="host-preset" type="button" data-host-preset="presentation"><strong>Presentation</strong><small>Follow the host screen, reduce distractions, and pause inputs.</small></button>
+          <button class="host-preset" type="button" data-host-preset="review"><strong>Open Review</strong><small>Release navigation so participants can revisit any section.</small></button>
+        </div>
+      </section>
+
+      <section class="facilitator-section">
+        <div class="host-section-heading"><span>02</span><div><h3>Navigation and screen control</h3><p>Control where the room is and whether participant screens follow your scroll position.</p></div></div>
+        <label><span>Active stage</span><select id="facilitator-stage">${STAGES.map((item, index) => `<option value="${index}"${index === state.stageIndex ? ' selected' : ''}>${item.number} · ${esc(item.title)}</option>`).join('')}</select></label>
+        <div class="host-toggle-list">
+          ${toggle('navigationLocked','Host-only navigation','Participants cannot use the stage rail, Previous, Next, or keyboard arrows. They automatically follow stage changes.',settings.navigationLocked,'↔')}
+          ${toggle('scrollSync','Follow my screen','While enabled, participant pages track the host’s vertical position without requiring a refresh.',settings.scrollSync,'⇅')}
+          ${toggle('focusMode','Participant focus mode','Hide the stage rail and secondary room controls on participant screens.',settings.focusMode,'◉')}
+        </div>
+        <div class="host-action-grid">
+          <button id="host-bring-everyone" class="primary-button" type="button">Bring everyone here</button>
+          <button id="host-send-top" class="secondary-button" type="button">Send everyone to top</button>
+        </div>
+        <p class="small muted">Active typing and open forms are protected. A participant finishes the current field before a deferred host view is applied.</p>
+      </section>
+
+      <section class="facilitator-section">
+        <div class="host-section-heading"><span>03</span><div><h3>Participation and visibility</h3><p>Reduce visual noise or temporarily hold room input during instruction.</p></div></div>
+        <div class="host-toggle-list">
+          ${toggle('pointersVisible','Show live pointers','Display remote participant cursors and names on the current stage.',settings.pointersVisible,'⌁')}
+          ${toggle('reactionsEnabled','Allow reactions','Show the shared reaction control and room-wide reaction animations.',settings.reactionsEnabled,'✦')}
+          ${toggle('contributionsPaused','Pause participant submissions','Temporarily block new votes, cards, responses, allocations, and edits while preserving unfinished text.',settings.contributionsPaused,'Ⅱ')}
+        </div>
+        <button id="host-clear-pointers" class="secondary-button" type="button">Clear visible pointers now</button>
+      </section>
+
+      <section class="facilitator-section">
+        <div class="host-section-heading"><span>04</span><div><h3>Activity timer</h3><p>Set a room-wide countdown for the current exercise.</p></div></div>
+        <div class="timer-presets">${[1,5,10,15,20].map((minutes) => `<button class="chip-button" type="button" data-timer-minutes="${minutes}">${minutes}m</button>`).join('')}</div>
+        <div class="button-row"><button id="timer-pause" class="secondary-button" type="button">${timer.running ? 'Pause' : 'Resume'}</button><button id="timer-clear" class="secondary-button" type="button">Clear</button></div>
+      </section>
+
+      <section class="facilitator-section">
+        <div class="host-section-heading"><span>05</span><div><h3>Room access and state</h3><p>Invite participants and verify the current collaboration record.</p></div></div>
+        <p class="mono small host-room-code">${esc(state.room?.code || 'PREVIEW')}</p>
+        <button id="facilitator-copy-link" class="secondary-button" type="button">Copy invite link</button>
+        <p class="small muted">${state.presence.length} participant${state.presence.length === 1 ? '' : 's'} · ${state.items.length} live contribution${state.items.length === 1 ? '' : 's'} · ${state.votes.length} vote record${state.votes.length === 1 ? '' : 's'}</p>
+      </section>
     </div>`;
 }
 
@@ -417,6 +545,150 @@ function personById(id) {
 }
 function roomSettingsPatch(patch) {
   return updateRoom({ settings:{ ...(state.room?.settings || {}), ...patch } });
+}
+function presentationPreset(name) {
+  const presets = {
+    workshop: {
+      mode: 'workshop',
+      navigationLocked: true,
+      scrollSync: false,
+      pointersVisible: true,
+      reactionsEnabled: true,
+      focusMode: false,
+      contributionsPaused: false
+    },
+    presentation: {
+      mode: 'presentation',
+      navigationLocked: true,
+      scrollSync: true,
+      pointersVisible: false,
+      reactionsEnabled: false,
+      focusMode: true,
+      contributionsPaused: true
+    },
+    review: {
+      mode: 'review',
+      navigationLocked: false,
+      scrollSync: false,
+      pointersVisible: true,
+      reactionsEnabled: true,
+      focusMode: false,
+      contributionsPaused: false
+    }
+  };
+  return presets[name] || presets.workshop;
+}
+async function updatePresentationSettings(patch, successMessage = '') {
+  if (!isFacilitator()) return null;
+  const next = { ...presentationSettings(), ...patch };
+  const result = await safeAction(
+    () => roomSettingsPatch({ presentation: next }),
+    successMessage
+  );
+  if (!result) return null;
+  if (!next.pointersVisible) {
+    clearRemoteCursors();
+    await realtime.broadcast('clear_pointers', { reason:'host-setting' });
+  }
+  if (!next.reactionsEnabled) $('.reaction-menu')?.remove();
+  renderFacilitatorControls();
+  renderShellState();
+  if (next.scrollSync && patch.scrollSync) await broadcastHostView({ reason:'scroll-sync-enabled' });
+  return result;
+}
+function activeScrollMetrics() {
+  const mainMax = workshopMain ? Math.max(0, workshopMain.scrollHeight - workshopMain.clientHeight) : 0;
+  const documentNode = document.scrollingElement || document.documentElement;
+  const documentMax = Math.max(0, documentNode.scrollHeight - window.innerHeight);
+  if (mainMax > 2) return { kind:'main', node:workshopMain, max:mainMax, top:workshopMain.scrollTop };
+  return { kind:'document', node:documentNode, max:documentMax, top:window.scrollY || documentNode.scrollTop || 0 };
+}
+function currentScrollRatio() {
+  const metrics = activeScrollMetrics();
+  return metrics.max ? clamp(metrics.top / metrics.max, 0, 1) : 0;
+}
+function trustedHostPayload(payload) {
+  return Boolean(
+    payload &&
+    payload.senderId &&
+    state.room?.facilitator_id &&
+    payload.senderId === state.room.facilitator_id
+  );
+}
+function hostViewPayload(ratio = currentScrollRatio(), reason = 'manual') {
+  return {
+    stageIndex: state.stageIndex,
+    stageId: stage().id,
+    ratio: clamp(ratio, 0, 1),
+    reason,
+    viewId: randomId()
+  };
+}
+async function broadcastHostView({ ratio = currentScrollRatio(), reason = 'manual', announce = true } = {}) {
+  if (!state.connected || !isFacilitator()) return;
+  if (Number(state.room?.active_stage) !== state.stageIndex) {
+    await safeAction(() => realtime.updateRoom({ active_stage: state.stageIndex }));
+  }
+  await realtime.broadcast('host_view', hostViewPayload(ratio, reason));
+  if (announce) toast(reason === 'top' ? 'Room sent to the top' : 'Room synchronized', 'Participant screens were aligned to the host view.');
+}
+function scrollParticipantToRatio(ratio, smooth = false) {
+  const metrics = activeScrollMetrics();
+  state.applyingHostScroll = true;
+  const top = metrics.max * clamp(ratio, 0, 1);
+  if (metrics.kind === 'main') workshopMain.scrollTo({ top, behavior: smooth ? 'smooth' : 'auto' });
+  else window.scrollTo({ top, behavior: smooth ? 'smooth' : 'auto' });
+  setTimeout(() => { state.applyingHostScroll = false; }, smooth ? 420 : 40);
+}
+async function applyHostView(payload, { requireContinuousSync = false, smooth = false } = {}) {
+  if (isFacilitator() || !trustedHostPayload(payload)) return;
+  const settings = presentationSettings();
+  if (requireContinuousSync && !settings.scrollSync) return;
+  if (participantIsBusy()) {
+    state.pendingHostView = { payload, requireContinuousSync, smooth };
+    if (!state.pendingHostViewNotice) {
+      state.pendingHostViewNotice = true;
+      toast('Host view queued', 'Your active field is protected. Screen synchronization resumes when you finish editing.');
+    }
+    return;
+  }
+  state.pendingHostView = null;
+  state.pendingHostViewNotice = false;
+  const requested = Number(payload.stageIndex);
+  if (Number.isFinite(requested) && requested !== state.stageIndex) {
+    await goToStage(requested, false, { forced:true, preserveScroll:true });
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  }
+  scrollParticipantToRatio(payload.ratio, smooth);
+}
+function flushPendingHostView() {
+  if (!state.pendingHostView || participantIsBusy()) return;
+  const pending = state.pendingHostView;
+  state.pendingHostView = null;
+  state.pendingHostViewNotice = false;
+  void applyHostView(pending.payload, {
+    requireContinuousSync: pending.requireContinuousSync,
+    smooth: pending.smooth
+  });
+}
+function handleWorkshopScroll() {
+  if (
+    !state.connected ||
+    !isFacilitator() ||
+    state.applyingHostScroll ||
+    !presentationSettings().scrollSync ||
+    state.scrollBroadcastFrame
+  ) return;
+  state.scrollBroadcastFrame = requestAnimationFrame(async () => {
+    state.scrollBroadcastFrame = null;
+    await realtime.broadcast('host_scroll', hostViewPayload(currentScrollRatio(), 'continuous-scroll'));
+  });
+}
+async function clearPointersRoomWide() {
+  if (!isFacilitator()) return;
+  clearRemoteCursors();
+  await realtime.broadcast('clear_pointers', { reason:'host-action' });
+  toast('Pointers cleared', 'Existing pointer markers were removed from participant screens.');
 }
 function average(values) {
   const nums=values.map(Number).filter(Number.isFinite);
@@ -780,6 +1052,7 @@ function renderDebrief() {
 }
 
 async function upsertItem(item) {
+  if (participantContributionsPaused()) throw new Error('The facilitator has temporarily paused participant inputs. Your unfinished text remains available.');
   if (state.connected) return realtime.upsertItem(item);
   const row = {
     id: item.id || randomId(), room_id: 'preview', item_type: item.item_type,
@@ -793,11 +1066,13 @@ async function upsertItem(item) {
   return row;
 }
 async function removeItem(id) {
+  if (participantContributionsPaused()) throw new Error('The facilitator has temporarily paused participant inputs.');
   if (state.connected) return realtime.removeItem(id);
   state.items = state.items.filter((item) => item.id !== id);
   scheduleRender();
 }
 async function castVote(target, value = 1) {
+  if (participantContributionsPaused()) throw new Error('The facilitator has temporarily paused voting and participant inputs.');
   if (state.connected) return realtime.castVote(target, value);
   const key = `${target}:${currentUserId()}`;
   const index = state.votes.findIndex((vote) => `${vote.target_key}:${vote.user_id}` === key);
@@ -914,6 +1189,10 @@ async function deleteBoardCard() {
 function bindBoardDragging() {
   $$('.board-card').forEach((card) => card.addEventListener('pointerdown',(event) => {
     if (event.target.closest('button,a')) return;
+    if (participantContributionsPaused()) {
+      toast('Participant inputs are paused', 'The facilitator will reopen the workspace when the instruction segment is complete.');
+      return;
+    }
     const board=$('#whiteboard'); const item=state.items.find((candidate)=>candidate.id===card.dataset.boardId); if(!board||!item)return;
     const boardRect=board.getBoundingClientRect(); const cardRect=card.getBoundingClientRect();
     state.drag={card,item,board,boardRect,offsetX:event.clientX-cardRect.left,offsetY:event.clientY-cardRect.top};
@@ -921,7 +1200,7 @@ function bindBoardDragging() {
   }));
 }
 async function handlePointerMove(event) {
-  if (state.connected && event.pointerType !== 'touch') realtime.sendCursor({ x:event.clientX/innerWidth,y:event.clientY/innerHeight,stage:stage().id });
+  if (state.connected && event.pointerType !== 'touch' && presentationSettings().pointersVisible) realtime.sendCursor({ x:event.clientX/innerWidth,y:event.clientY/innerHeight,stage:stage().id });
   if (!state.drag) return;
   const {card,boardRect}=state.drag;
   const x=clamp((event.clientX-boardRect.left-state.drag.offsetX)/boardRect.width*100,0,88);
@@ -1036,15 +1315,20 @@ function copyInviteLink() {
   const url=new URL(location.href); if(state.room?.code)url.searchParams.set('room',state.room.code); navigator.clipboard?.writeText(url.href).then(()=>toast('Invite link copied',url.href)).catch(()=>toast('Copy unavailable','Select the address bar and copy the URL manually.','error'));
 }
 function openReactionMenu() {
+  if (!presentationSettings().reactionsEnabled) {
+    toast('Reactions are disabled', 'The facilitator has hidden room reactions for the current segment.');
+    return;
+  }
   $('.reaction-menu')?.remove(); const button=$('#reaction-button'); const rect=button.getBoundingClientRect(); const menu=document.createElement('div'); menu.className='reaction-menu'; menu.style.left=`${Math.max(10,rect.right-220)}px`;menu.style.top=`${rect.top-54}px`; menu.innerHTML=['👏','💡','🔥','✅','🤔','🎯'].map((emoji)=>`<button type="button" data-reaction="${emoji}">${emoji}</button>`).join(''); document.body.append(menu);
   menu.addEventListener('click',async(event)=>{const target=event.target.closest('[data-reaction]');if(!target)return;await realtime.broadcast('reaction',{emoji:target.dataset.reaction,x:.5,y:.78});showReaction({emoji:target.dataset.reaction,x:.5,y:.78,senderId:currentUserId()});menu.remove();});
   setTimeout(()=>document.addEventListener('pointerdown',(event)=>{if(!menu.contains(event.target))menu.remove();},{once:true}),0);
 }
 function showReaction(payload) {
+  if (!presentationSettings().reactionsEnabled) return;
   const node=document.createElement('div');node.className='floating-reaction';node.textContent=payload.emoji||'👏';node.style.setProperty('--x',`${clamp((payload.x||.5)*100,3,97)}%`);node.style.setProperty('--y',`${clamp((payload.y||.75)*100,10,95)}%`);$('#reaction-layer').append(node);setTimeout(()=>node.remove(),2400);
 }
 function renderRemoteCursor(payload) {
-  if(!payload||payload.senderId===currentUserId())return;
+  if(!presentationSettings().pointersVisible||!payload||payload.senderId===currentUserId())return;
   if(payload.stage && payload.stage !== stage().id){const stale=state.remoteCursors.get(payload.senderId);if(stale){stale.node.remove();state.remoteCursors.delete(payload.senderId);}return;}
   let node=state.remoteCursors.get(payload.senderId)?.node;
   if(!node){node=document.createElement('div');node.className='remote-cursor';node.innerHTML=`<div class="remote-cursor-pointer"></div><span class="remote-cursor-label"></span>`;$('#remote-cursors').append(node);state.remoteCursors.set(payload.senderId,{node,lastSeen:Date.now()});}
@@ -1074,7 +1358,7 @@ async function handleJoin(event) {
     const url=new URL(location.href);url.searchParams.set('room',snapshot.room.code);history.replaceState({},'',url);
     $('#room-code-label').textContent=snapshot.room.code;$('#room-code-button').classList.remove('hidden');setConnectionLabel('connected',snapshot.mode);closeDialog(joinDialog);
     if(team==='breezy'||team==='kp'){state.selectedClient=team;storageSet('se-selected-client',team);}
-    await goToStage(Number(snapshot.room.active_stage||0));
+    await goToStage(Number(snapshot.room.active_stage||0),false,{forced:true});
     toast(create?'Workshop room created':'Workshop joined',`Room ${snapshot.room.code} is live in ${snapshot.mode==='supabase'?'cloud':'local demo'} mode.`);
   }catch(error){console.error(error);toast('Could not enter the room',error?.message||String(error),'error');}
   finally{submit.disabled=false;submit.textContent=original;}
@@ -1095,10 +1379,21 @@ function wireRealtime() {
   realtime.on('connection',(snapshot)=>{state.connectionMode=snapshot.mode;setConnectionLabel(snapshot.status,snapshot.mode);});
   realtime.on('room',(room)=>{
     state.room=room;
+    const settings=presentationSettings(room);
     if(room?.code){$('#room-code-label').textContent=room.code;$('#room-code-button').classList.remove('hidden');}
+    if(!settings.pointersVisible)clearRemoteCursors();
+    if(!settings.reactionsEnabled)$('.reaction-menu')?.remove();
+    if(!isFacilitator()&&settings.navigationLocked)state.followFacilitator=true;
+    else if(!isFacilitator()&&settings.mode==='review')state.followFacilitator=false;
     const requested=Number(room?.active_stage);
-    if(state.connected&&state.followFacilitator&&!isFacilitator()&&Number.isFinite(requested)&&requested!==state.stageIndex)goToStage(requested,false);
-    else scheduleRender();
+    const shouldFollow=state.connected&&!isFacilitator()&&(settings.navigationLocked||state.followFacilitator);
+    if(shouldFollow&&Number.isFinite(requested)&&requested!==state.stageIndex){
+      const payload={stageIndex:requested,stageId:STAGES[requested]?.id,ratio:0,reason:'stage-change',senderId:room.facilitator_id};
+      if(participantIsBusy()){
+        state.pendingHostView={payload,requireContinuousSync:false,smooth:false};
+        if(!state.pendingHostViewNotice){state.pendingHostViewNotice=true;toast('Host moved the room','Your active field is protected. You will follow when editing is complete.');}
+      }else goToStage(requested,false,{forced:true});
+    }else scheduleRender();
   });
   realtime.on('items',(items)=>{state.items=items||[];scheduleRender();});
   realtime.on('votes',(votes)=>{state.votes=votes||[];scheduleRender();});
@@ -1106,11 +1401,15 @@ function wireRealtime() {
   realtime.on('cursor',renderRemoteCursor);
   realtime.on('reaction',showReaction);
   realtime.on('card_move',applyRemoteCardMove);
+  realtime.on('host_scroll',(payload)=>applyHostView(payload,{requireContinuousSync:true,smooth:false}));
+  realtime.on('host_view',(payload)=>applyHostView(payload,{requireContinuousSync:false,smooth:true}));
+  realtime.on('clear_pointers',(payload)=>{if(trustedHostPayload(payload))clearRemoteCursors();});
   realtime.on('activity',(payload)=>toast(payload?.title||'Workshop activity',payload?.message||''));
   realtime.on('warning',(warning)=>toast(warning.title,warning.message,'warning'));
 }
 
 function wireGlobalEvents() {
+  $$('dialog').forEach((dialog) => dialog.addEventListener('close', () => setTimeout(flushPendingHostView, 0)));
   sceneRoot.addEventListener('click',handleSceneClick);
   sceneRoot.addEventListener('submit',handleSceneSubmit);
   sceneRoot.addEventListener('input',handleSceneInput);
@@ -1133,7 +1432,7 @@ function wireGlobalEvents() {
   $('#close-facilitator').addEventListener('click',()=>closeDialog(facilitatorDialog));
   $('#room-code-button').addEventListener('click',copyInviteLink);
   $('#reaction-button').addEventListener('click',openReactionMenu);
-  $('#follow-facilitator').addEventListener('change',(event)=>{state.followFacilitator=event.target.checked;if(state.followFacilitator&&Number.isFinite(Number(state.room?.active_stage)))goToStage(Number(state.room.active_stage));});
+  $('#follow-facilitator').addEventListener('change',(event)=>{state.followFacilitator=event.target.checked;if(state.followFacilitator&&Number.isFinite(Number(state.room?.active_stage)))goToStage(Number(state.room.active_stage),false,{forced:true});});
   $('#join-form').addEventListener('submit',handleJoin);
   $('#join-cancel').addEventListener('click',()=>{state.preview=true;state.profile=state.profile||{id:'preview-user',name:'Preview participant',team:'preview',role:'facilitator',color:'#2864dc'};closeDialog(joinDialog);setConnectionLabel('preview','preview');renderStage();});
   $('#color-options').addEventListener('click',(event)=>{const button=event.target.closest('[data-color]');if(!button)return;$$('.color-option').forEach((item)=>item.classList.remove('is-active'));button.classList.add('is-active');});
@@ -1142,8 +1441,21 @@ function wireGlobalEvents() {
   $('#strategy-form').addEventListener('submit',saveStrategy);$('#strategy-cancel').addEventListener('click',()=>closeDialog(strategyDialog));$('#strategy-delete').addEventListener('click',deleteStrategy);
   $('#detail-close').addEventListener('click',()=>closeDialog(detailDialog));
   $('#detail-content').addEventListener('click',(event)=>{const target=event.target.closest('[data-action=audit-edit]');if(target){closeDialog(detailDialog);openFindingDialog(target.dataset.id);}});
-  facilitatorDialog.addEventListener('change',(event)=>{if(event.target.id==='facilitator-stage')goToStage(Number(event.target.value),true);});
-  facilitatorDialog.addEventListener('click',(event)=>{const timerButton=event.target.closest('[data-timer-minutes]');if(timerButton)return setTimer(timerButton.dataset.timerMinutes);if(event.target.closest('#timer-pause'))return toggleTimer();if(event.target.closest('#timer-clear'))return clearTimer();if(event.target.closest('#facilitator-copy-link'))return copyInviteLink();});
+  facilitatorDialog.addEventListener('change',(event)=>{
+    if(event.target.id==='facilitator-stage')return goToStage(Number(event.target.value),true);
+    const setting=event.target.dataset.hostSetting;
+    if(setting)return updatePresentationSettings({[setting]:event.target.checked},`${event.target.closest('.host-setting-row')?.querySelector('strong')?.textContent||'Host setting'} updated`);
+  });
+  facilitatorDialog.addEventListener('click',(event)=>{
+    const timerButton=event.target.closest('[data-timer-minutes]');if(timerButton)return setTimer(timerButton.dataset.timerMinutes);
+    const presetButton=event.target.closest('[data-host-preset]');if(presetButton)return updatePresentationSettings(presentationPreset(presetButton.dataset.hostPreset),`${presetButton.querySelector('strong')?.textContent||'Host'} mode applied`);
+    if(event.target.closest('#host-bring-everyone'))return broadcastHostView({reason:'bring-everyone'});
+    if(event.target.closest('#host-send-top'))return broadcastHostView({ratio:0,reason:'top'});
+    if(event.target.closest('#host-clear-pointers'))return clearPointersRoomWide();
+    if(event.target.closest('#timer-pause'))return toggleTimer();if(event.target.closest('#timer-clear'))return clearTimer();if(event.target.closest('#facilitator-copy-link'))return copyInviteLink();
+  });
+  workshopMain.addEventListener('scroll',handleWorkshopScroll,{passive:true});
+  window.addEventListener('scroll',handleWorkshopScroll,{passive:true});
   document.addEventListener('pointermove',handlePointerMove,{passive:true});document.addEventListener('pointerup',handlePointerUp);document.addEventListener('pointercancel',handlePointerUp);
   document.addEventListener('keydown',(event)=>{if(event.target.matches('input,textarea,select')||document.querySelector('dialog[open]'))return;if(event.key==='ArrowRight')goToStage(state.stageIndex+1,isFacilitator());if(event.key==='ArrowLeft')goToStage(state.stageIndex-1,isFacilitator());});
   window.addEventListener('beforeunload',()=>realtime.disconnect());
@@ -1156,6 +1468,33 @@ function initialize() {
   const stageParam=new URLSearchParams(location.search).get('stage');const stageIndex=STAGES.findIndex((item)=>item.id===stageParam);if(stageIndex>=0)goToStage(stageIndex);
   state.timerInterval=setInterval(updateTimer,1000);state.cursorCleanup=setInterval(cleanupRemoteCursors,1200);
   if(!new URLSearchParams(location.search).has('preview'))setTimeout(()=>openDialog(joinDialog),120);
+}
+
+if (CONFIG.debug) {
+  window.__SE_DEBUG = {
+    state,
+    realtime,
+    renderStage,
+    renderStageRail,
+    renderShellState,
+    renderFacilitatorControls,
+    presentationSettings,
+    goToStage,
+    applyHostView,
+    broadcastHostView,
+    setSession({ profile, room, connected = true, preview = false } = {}) {
+      if (profile) state.profile = { ...state.profile, ...profile };
+      if (room) state.room = { ...state.room, ...room };
+      state.connected = connected;
+      state.preview = preview;
+      realtime.profile = { ...state.profile };
+      realtime.user = { id: state.profile?.id || 'debug-user' };
+      realtime.room = { ...state.room };
+      realtime.mode = connected ? 'local' : 'disconnected';
+      renderStage();
+    },
+    emit(type, detail) { realtime.emit(type, detail); }
+  };
 }
 
 initialize();

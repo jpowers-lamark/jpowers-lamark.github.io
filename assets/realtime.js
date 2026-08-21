@@ -139,6 +139,9 @@ class WorkshopRealtime extends EventTarget {
       .on('broadcast', { event: 'reaction' }, ({ payload }) => this.emit('reaction', payload))
       .on('broadcast', { event: 'card_move' }, ({ payload }) => this.emit('card_move', payload))
       .on('broadcast', { event: 'activity' }, ({ payload }) => this.emit('activity', payload))
+      .on('broadcast', { event: 'host_scroll' }, ({ payload }) => this.emit('host_scroll', payload))
+      .on('broadcast', { event: 'host_view' }, ({ payload }) => this.emit('host_view', payload))
+      .on('broadcast', { event: 'clear_pointers' }, ({ payload }) => this.emit('clear_pointers', payload))
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
           await this.channel.track(this.presencePayload());
