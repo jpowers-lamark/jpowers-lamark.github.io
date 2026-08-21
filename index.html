@@ -15,7 +15,7 @@
   <title>Lamark Search Everywhere Experience Lab</title>
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/styles.css?v=3.0.0">
+  <link rel="stylesheet" href="./assets/styles.css?v=3.1.0">
 </head>
 <body>
   <a class="skip-link" href="#workshop-main">Skip to workshop</a>
@@ -29,6 +29,7 @@
       <div class="room-status" aria-live="polite">
         <button id="room-code-button" class="room-pill hidden" type="button" title="Copy workshop link"><i></i><span id="room-code-label">ROOM</span></button>
         <span id="connection-label" class="connection-label">Initializing</span>
+        <span id="presentation-status" class="presentation-status hidden" aria-live="polite"></span>
         <label class="follow-toggle hidden"><input id="follow-facilitator" type="checkbox" checked><span>Follow facilitator</span></label>
       </div>
       <div class="participant-cluster">
@@ -121,6 +122,6 @@
   <dialog id="detail-dialog" class="modal modal-wide" aria-labelledby="detail-title"><div class="modal-content"><div class="modal-heading compact"><p class="eyebrow">AUDIT DETAIL</p><h2 id="detail-title">Finding</h2></div><div id="detail-content"></div><div class="modal-actions"><button id="detail-close" class="primary-button" type="button">Close</button></div></div></dialog>
 
   <script src="./assets/config.js"></script>
-  <script type="module" src="./assets/app.js?v=3.0.0"></script>
+  <script type="module" src="./assets/app.js?v=3.1.0"></script>
 </body>
 </html>
